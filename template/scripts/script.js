@@ -6,5 +6,7 @@
 		instance = M.Modal.init(elem);
 		elem = document.querySelector('.collapsible');
 		instance = M.Collapsible.init(elem);
+		elem = document.querySelector('.materialboxed');
+		instance = M.Materialbox.init(elem);
 	});
 })();
