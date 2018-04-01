@@ -1,0 +1,13 @@
+form {
+	margin: 0px;
+	display: inline-block;
+}
+
+.card-content {
+	padding-top: 0 !important;
+	padding-left: 4px !important;
+}
+
+img {
+	height: 200px;
+}
