@@ -9,15 +9,8 @@ import AboutModal from './AboutModal';
 import M from 'materialize-css';
 
 export default class Nav extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
 	componentDidMount() {
-		window.addEventListener('load', () => {
-			let elem = document.querySelector('.sidenav');
-			let instance = M.Sidenav.init(elem);
-		})
+		M.Sidenav.init(document.querySelector('.sidenav'));
 	}
 
 	render() {
@@ -29,11 +22,11 @@ export default class Nav extends React.Component {
 						<Logo/>
 						<Menu/>
 						<NavList className="right hide-on-med-and-down">
-							<NavItem icon="home" link="#home">Home</NavItem>
-							<NavItem icon="favorite" link="#favorite">Favorite</NavItem>
-							<NavItem icon="file_download" link="#downloads">Downloads</NavItem>
+							<NavItem icon="home" link="/">Home</NavItem>
+							<NavItem icon="favorite" link="/favorites">Favorites</NavItem>
+							<NavItem icon="file_download" link="/downloads">Downloads</NavItem>
 							<NavItem icon="help" link="#about" className="modal-trigger">About Us</NavItem>
-							<NavItem icon="account_circle" link="#login">Sign In</NavItem>
+							<NavItem icon="account_circle" link="/login">Sign In</NavItem>
 						</NavList>
 						<SearchBar />
 					</div>
@@ -41,11 +34,11 @@ export default class Nav extends React.Component {
 			</div>
 			<NavList className="sidenav" id="mobile">
 				<NavHeader>MangaKat</NavHeader>
-				<NavItem icon="home" link="#home">Home</NavItem>
-				<NavItem icon="favorite" link="#favorite">Favorite</NavItem>
-				<NavItem icon="file_download" link="#downloads">Downloads</NavItem>
+				<NavItem icon="home" link="/">Home</NavItem>
+				<NavItem icon="favorite" link="/favorites">Favorites</NavItem>
+				<NavItem icon="file_download" link="/downloads">Downloads</NavItem>
 				<NavItem icon="help" link="#about" className="modal-trigger">About Us</NavItem>
-				<NavItem icon="account_circle" link="#login">Sign In</NavItem>
+				<NavItem icon="account_circle" link="/login">Sign In</NavItem>
 			</NavList>
 			<AboutModal/>
 			</header>

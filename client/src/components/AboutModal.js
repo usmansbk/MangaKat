@@ -2,15 +2,8 @@ import React from 'react';
 import M from 'materialize-css';
 
 export default class AboutModal extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
 	componentDidMount() {
-		window.addEventListener('load', () => {
-			let elem = document.querySelector('.modal');
-			let instance = M.Modal.init(elem);
-		});
+		M.Modal.init(document.querySelector('.modal'));
 	}
 
 	render() {
