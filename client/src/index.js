@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Nav from './components/Nav';
+import Dashboard from './components/Dashboard';
 import './css/index.css';
 import './css/materialize.min.css';
 
 ReactDOM.render(
-	<Nav/>,
+	<Dashboard/>,
 	document.querySelector('#root')
 )
