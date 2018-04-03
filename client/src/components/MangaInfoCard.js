@@ -10,11 +10,15 @@ export default class MangaInfoCard extends React.Component {
 	
 	render() {
 		const {manga_title, src, author, chapters, status, score, last_update, summary} = this.props;
+		const style = {
+			maxHeight: "100%",
+			maxWidth: "100%"
+		}
 		return (
 			<div className="col s12 m6 l6">
 				<div className="card horizontal">
 					<div className="card-image">
-						<img alt={manga_title} src={src} />
+						<img alt={manga_title} src={src} style={style} />
 					</div>
 					<div className="card-stacked">
 						<div className="card-content">

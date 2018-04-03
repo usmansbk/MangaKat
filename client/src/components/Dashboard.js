@@ -11,9 +11,9 @@ export default function Dashboard(props) {
 			<div className="container">
 				<div className="row">
 					<Route exact path='/' component={CardsView} />
-					<Route exact path='/favorites' component={CardsView} />
-					<Route exact path='/downloads' component={CardsView} />
-					<Route exact path='/manga' component={MangaView} />
+					<Route path='/favorites' component={CardsView} />
+					<Route path='/downloads' component={CardsView} />
+					<Route path='/manga/:name' component={MangaView} />
 				</div>
 			</div>
 		</React.Fragment>
