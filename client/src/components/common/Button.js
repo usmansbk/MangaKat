@@ -1,11 +1,14 @@
 import React from 'react';
-import Icon from './Icon';
 
-export default function Button({icon, position}) {
+export default function Button(props) {
+	const {children, ...rest} = props;
+	const style = {
+		marginLeft: "2px",
+		marginRight: "2px"
+	}
 	return (
-			<a 
-			className={`waves-effect waves-light btn-small ${position}`}>
-			<Icon name={icon} />
+			<a className="waves-effect waves-light btn" style={style} {...rest} >
+			{children}
 			</a>
 	);
 }

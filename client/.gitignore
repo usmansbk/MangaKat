@@ -2,7 +2,6 @@
 
 # dependencies
 /node_modules
-package-lock.json
 
 # testing
 /coverage
@@ -16,6 +15,7 @@ package-lock.json
 .env.development.local
 .env.test.local
 .env.production.local
+package-lock.json
 
 npm-debug.log*
 yarn-debug.log*

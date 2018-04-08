@@ -1,21 +1,28 @@
 import React from 'react';
-import Icon from './common/Icon';
 
 export default class MangaCard extends React.Component {
 	render() {
-		const {src, title, icon, manga_title} = this.props;
-		const style = { height: "200px" };
+		const {img, mangaTitle} = this.props;
+		const style = {
+			height: "200px",
+			padding: "4px"
+		};
 		return (
 			<div className="col s6 m4 l2">
 				<div className="card hoverable">
 					<div className="card-image">
-						<img alt={manga_title} src={src} style={style} />
-						<span title={title} className="btn-floating halfway-fab red">
-							<Icon name={icon}/>
-						</span>
+						<img alt={mangaTitle} src={img} style={style} />
 					</div>
-					<div className="card-content">
-						<span className="truncate">{manga_title}</span>
+					<div
+					className="card-content"
+					style={
+						{
+							padding: '0',
+							paddingLeft: '4px'
+						}
+					}
+					>
+						<span className="truncate">{mangaTitle}</span>
 					</div>
 				</div>
 			</div>

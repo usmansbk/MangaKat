@@ -2,10 +2,16 @@ import React from 'react';
 import Button from './Button';
 
 export default function NavControls(props) {
+	const style = {
+		marginBottom: "5px"
+	};
+
+	const { onClick } = props
+
 	return (
-		<div>
-			<Button icon="arrow_back" position="left" />
-			<Button icon="arrow_forward" position="right" />
+		<div className="right" style={style}>
+			<Button name='previous' onClick={onClick} >Previous</Button>
+			<Button name='next' onClick={onClick} >Next</Button>
 		</div>
 	);
 }
