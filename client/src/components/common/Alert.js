@@ -4,7 +4,7 @@ import Icon from './Icon';
 export default function Alert(props) {
 	const {children, onClick} = props;
 	const style = {
-		height: '18px',
+		height: 'auto',
 		lineHeight: '0'
 	}
 	return (

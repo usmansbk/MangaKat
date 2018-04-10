@@ -1,11 +1,14 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Dashboard from '../components/dashboard/Dashboard';
-import { Status } from '../redux/actions';
+import { Status, setStatus } from '../redux/actions';
 
-const hasFailed = (status) => (status === Status.FETCH_MANGA_FAILURE) || (status === Status.FETCH_CHAPTER_FAILURE);
+const isFetching = (status) => {
+	return (status === Status.FETCHING);
+}
+const hasFailed = (status) => (status === Status.FETCH_MANGA_FAILURE) || (status === Status.FETCH_CHAPTER_FAILURE) || (status === Status.FETCH_MANGALIST_FAILURE);
 const getFetching = (mangas, chapters, status) => {
-	return (mangas.isFetching || chapters.isFetching) && !hasFailed(status);
+	return (mangas.isFetching || chapters.isFetching) && isFetching(status);
 }
 
 const getStatus = (status) => {
@@ -19,8 +22,15 @@ const mapStateToProps = (state) => {
 	}
 }
 
+const mapDispatchToProps = (dispatch) => {
+	return {
+		clearError: () => dispatch(setStatus(Status.CLEAR)),
+	}
+}
+
 const DashboardContainer = withRouter(connect(
-	mapStateToProps
+	mapStateToProps,
+	mapDispatchToProps
 )(Dashboard))
 
 export default DashboardContainer

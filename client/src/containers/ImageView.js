@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import ImageView from '../components/views/ImageView';
-import {fetchChapter} from '../redux/actions';
+import {fetchChapter, fetchManga, selectManga, selectChapter, saveSession} from '../redux/actions';
 
 const getMangaName = (mangas, currentManga) => {
 	const manga = mangas.byId[currentManga];
@@ -15,6 +15,14 @@ const getList = (mangas, mangaId) => {
 
 const getChapters = (chapters) => chapters.byId;
 
+const getUpdateStatus = (mangas, mangaId) => {
+	const manga = mangas[mangaId];
+	return manga && manga.isUpdated;
+}
+
+const getLastPage = (mangas, mangaId) => {
+	return mangas[mangaId].lastPage || 1;
+}
 const mapStateToProps = (state) => {
 	return {
 		mangaName: getMangaName(state.mangas, state.selectedManga),
@@ -22,14 +30,23 @@ const mapStateToProps = (state) => {
 		chapterId: state.selectedChapter,
 		pageId: state.selectedPage,
 		chapters: getChapters(state.chapters),
-		chaptersList: getList(state.mangas.byId, state.selectedManga)
+		chaptersList: getList(state.mangas.byId, state.selectedManga),
+		isUpdated: getUpdateStatus(state.mangas.byId, state.selectedManga),
+		lastPage: getLastPage(state.mangas.byId, state.selectedManga)
 	}
 }
 
 const mapDispatchToProps = dispatch => {
 	return {
-		onEnter: (url) => {
-			dispatch(fetchChapter(url));
+		onEnter: (url, mangaId, isUpdated, isChapterUpdated, pageId) => {
+			const chapterId = url.substring(url.lastIndexOf('/')+1);
+			dispatch(selectManga(mangaId));
+			dispatch(selectChapter(chapterId));
+			if (!isChapterUpdated) dispatch(fetchChapter(url));
+			if (!isUpdated) dispatch(fetchManga(mangaId));
+		},
+		saveSession(mangaId, chapterId, pageId) {
+			dispatch(saveSession(mangaId, chapterId, pageId))
 		}
 	}
 }

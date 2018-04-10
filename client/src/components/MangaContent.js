@@ -1,24 +1,29 @@
 import React from 'react';
 import MangaInfoCard from './MangaInfoCard';
 import ChapterList from './ChapterList';
-import NoMatch from './error/NoMatch';
 
 export default class MangaContent extends React.Component {
 	componentWillMount() {
-		const { history, onEnter } = this.props;
+		const { history, onEnter, mangas } = this.props;
 		const mangaUrl = history.location.pathname;
-		const id = mangaUrl.substring(1);
-		onEnter(id);
+		this.id = mangaUrl.substring(1);
+		onEnter(this.id, mangas);
 	}
 
 	render() {
-		const { manga, history, match} = this.props;
-		const view = manga ?
+		const { manga, match} = this.props;
+		const chapters = manga && manga.chapters
+		return	(
 			<React.Fragment>
-				<MangaInfoCard {...manga }/>
-				<ChapterList chapters={manga.chapters} match={match} />
+				<MangaInfoCard
+				 mangaId={this.id}
+				 handleFavorite={this.props.handleFavorite}
+				 handleResume={this.props.handleResume}
+				 favorites={this.props.favorites}
+				 lastRead={this.props.lastRead}
+				 {...manga }/>
+				<ChapterList chapters={chapters || []} match={match} />
 			</React.Fragment>
-			: <NoMatch history={history}/>
-		return view;
+		)
 	}
 }

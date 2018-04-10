@@ -1,17 +1,15 @@
 import React from 'react';
 import Icon from './Icon';
 
-export default function Fab(props) {
-	const {title, location} = props;
-	let icon;
-	switch(location) {
-		case '/favorites': icon = 'favorite'; break;
-		case '/downloads': icon = 'delete'; break;
-		default: icon = 'favorite'; break;
+export default class Fab extends React.Component {
+	render() {
+		const { name, href, onClick} = this.props;
+		return (
+			<div className="fixed-action-btn">
+				<a href={href} className="btn-floating btn-large red" onClick={onClick}>
+					<Icon name={name} />
+				</a>
+			</div>
+		)
 	}
-	return (
-		<span title={title} className="btn-floating halfway-fab red">
-			<Icon name={icon}/>
-		</span>
-	);
 }

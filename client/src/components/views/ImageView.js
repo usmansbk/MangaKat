@@ -16,49 +16,67 @@ export default class ImageView extends React.Component {
 	}
 
 	handleChange(event) {
-		const {name} = event.target;
-		const { onEnter, history, mangaId } = this.props;
+		const {name, value} = event.target;
+		this.chapterId = value;
+		const { onEnter, history, isUpdated, chapters, match, saveSession } = this.props;
+		const {url} = match;
+		const mangaId = url.substring(1, url.lastIndexOf('/'));
 		if (name === 'chapterId') {
-			const { value } = event.target;
 			const newUrl = `/${mangaId}/${value}`;
 			history.push(newUrl)
-			onEnter(newUrl)
+			const chapter = chapters[newUrl];
+			const isChapterUpdated = chapter && chapter.isUpdated;
+			onEnter(newUrl, mangaId, isUpdated, isChapterUpdated)
 			this.setState({pageId: 1});
 		}
 		this.setState({
-			[name]: event.target.value
+			[name]: value
 		});
+		saveSession(mangaId, value, this.state.pageId);
 	}
 
 	handleClick(event) {
-		const { name } = event.target;
-		let { pageId, pages } = this.state;
-		let length = pages.length;
-		switch(name.toLowerCase()) {
-			case 'previous':
-					this.setState({
-						pageId: --pageId % length
-					});
-				break;
-			case 'next':
-				this.setState({
-					pageId: ++pageId % length
-				});
-				break;
-			default:
-				return
-		}
+		let { name } = event.target;
+		let { pageId } = this.state;
+		const { mangaId, chapterId } = this.props;
+		const { saveSession } = this.props;
+		name = name.toLowerCase();
+		if (name === 'previous') pageId = --pageId 
+		else pageId = ++pageId;
+		this.setState({
+			pageId
+		});
+		saveSession(mangaId, chapterId, pageId);
 	}
 
 	componentWillMount() {
-		const { onEnter, match } = this.props;
-		const url = match.url;
-		onEnter(url);
+		const { 
+			onEnter,
+			match,
+			isUpdated,
+			chapters,
+			lastPage,
+			saveSession,
+		} = this.props;
+		const {url} = match;
+		const mangaId = url.substring(1, url.lastIndexOf('/'));
+		const currentChapter = url.substring(url.lastIndexOf('/')+1);
+		const chapter = chapters[url];
+		const pages = chapter && chapter.pages;
+		if (pages) {
+			this.setState({
+				pages,
+				pageId: lastPage
+			})
+		}
+		const isChapterUpdated = chapter && chapter.isUpdated;
+		onEnter(match.url, mangaId, isUpdated, isChapterUpdated);
+		saveSession(mangaId, currentChapter, this.state.pageId);
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const { chapters, chapterId, mangaId } = nextProps;
-		const chapterKey = `/${mangaId}/${chapterId}`
+		const { chapters, match } = nextProps;
+		const chapterKey = match.url;
 		const chapter = chapters[chapterKey];
 		const pages = chapter && chapter.pages;
 		const name = chapter && chapter.name;
@@ -68,7 +86,6 @@ export default class ImageView extends React.Component {
 				name
 			})
 		}
-		this.setState({chapterId})
 	}
 
 	render() {
@@ -86,8 +103,8 @@ export default class ImageView extends React.Component {
 				<Link to={mangaLink}>{mangaName}</Link> - Chapter {chapterId}: {name} Page {pageId}
 				</h5>
 				<JumpNav
-				page={this.state.pageId}
-				chapter={this.state.chapterId}
+				page={pageId}
+				chapter={chapterId}
 				onChange={this.handleChange}
 				pages={pages}
 				chapters={this.props.chaptersList} />

@@ -5,33 +5,58 @@ import {
 	SET_STATUS,
 	REQUEST_MANGA,
 	RECEIVE_MANGA,
+	REQUEST_MANGALIST,
+	RECEIVE_MANGALIST,
 	REQUEST_CHAPTER,
 	RECEIVE_CHAPTER,
+	FAVORITE_MANGA,
+	UNFAVORITE_MANGA,
+	SAVE_LAST_SESSION,
 	SEARCH_MANGA,
+	UPDATE_COUNT,
 } from './actions';
-import normalizeList from './helpers/normalizeList';
-import mangaList from './helpers/mangaList';
-
-const normalizedList = normalizeList(mangaList);
 
 function mangas(state = {
 	isFetching: false,
-	fetchedItemCount: 200,
-	nextItemId: 0,
-	byId: normalizedList.entities.manga,
-	ids: normalizedList.result,
+	isInvalidated: true,
+	fetchedItemsCount: 0,
+	itemsPerPage: 50,
+	byId: {},
+	ids: [],
 }, action) {
 	switch(action.type) {
+		case UPDATE_COUNT:
+			return Object.assign({}, state, {
+				fetchedItemsCount: action.fetchedItemsCount
+			});
 		case REQUEST_MANGA:
 			return Object.assign({}, state, {
 				isFetching: true,
-			})
-		case RECEIVE_MANGA:
+			});
+		case RECEIVE_MANGA: case SAVE_LAST_SESSION:
 			return Object.assign({}, state, {
 				isFetching: false,
 				byId: Object.assign({}, state.byId, {
-					[action.mangaId]: Object.assign({}, state.byId[action.mangaId], action.manga)
+					[action.mangaId]: Object.assign({}, state.byId[action.mangaId],Object.assign({}, action.manga, {
+						mangaId: action.mangaId,
+						isUpdated: true,
+						lastPage: action.pageId || 1,
+						lastChapter: action.chapterId || 1,
+					}))
 				}),
+				ids: [...(new Set(state.ids)).add(action.mangaId)]
+			});
+		case REQUEST_MANGALIST:
+			return Object.assign({}, state, {
+				isInvalidated: false,
+				isFetching: true
+			});
+		case RECEIVE_MANGALIST:
+			return Object.assign({}, state, {
+				isFetching: false,
+				isInvalidated: false,
+				byId: action.byId,
+				ids: action.ids
 			})
 		default:
 			return state
@@ -51,9 +76,24 @@ function chapters(state = {
 			return Object.assign({}, state, {
 				isFetching: false,
 				byId: Object.assign({}, state.byId, {
-					[action.chapterId]: action.chapter
+					[action.chapterId]: Object.assign({}, action.chapter, {
+						isUpdated: true
+					})
 				}),
 			})
+		default:
+			return state
+	}
+}
+
+function favorites(state = [], action) {
+	switch(action.type) {
+		case FAVORITE_MANGA:
+			return [...(new Set(state)).add(action.mangaId)];
+		case UNFAVORITE_MANGA:
+			let s = new Set(state);
+			s.delete(action.mangaId);
+			return [...s];
 		default:
 			return state
 	}
@@ -96,6 +136,7 @@ function search(state=null, action) {
 }
 
 const mangaApp = combineReducers({
+	favorites,
 	selectedManga,
 	selectedChapter,
 	search,

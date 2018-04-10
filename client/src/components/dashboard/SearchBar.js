@@ -8,6 +8,27 @@ export default class SearchBar extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleClick = this.handleClick.bind(this);
+		this.handleFocus = this.handleFocus.bind(this);
+		this.handleBlur = this.handleBlur.bind(this);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		const {search} = nextProps;
+		this.setState({
+			search
+		})
+	}
+
+	handleFocus(event) {
+		const { history } = this.props;
+		this.url = history.location.pathname;
+		history.push('/');
+	}
+
+	handleBlur(event) {
+		const { history } = this.props;
+		const { search } = this.state;
+		if (!search) history.goBack();;
 	}
 
 	handleChange(event) {
@@ -18,8 +39,9 @@ export default class SearchBar extends React.Component {
 	}
 
 	handleClick(event) {
-		const { find } = this.props;
+		const { find, history } = this.props;
 		this.setState({search: ''});
+		history.goBack();
 		find('');
 	}
 
@@ -36,7 +58,7 @@ export default class SearchBar extends React.Component {
 		return (
 			<form className="right" style={style} onSubmit={this.handleSubmit}>
 				<div className="input-field">
-					<input onChange={this.handleChange} value={this.state.search} type="search" name="search" placeholder="Find Manga" required />
+					<input onBlur={this.handleBlur} onChange={this.handleChange} onFocus={this.handleFocus} value={this.state.search} type="search" name="search" placeholder="Find Manga" required />
 					<label className="label-icon" htmlFor="search"><Icon name="search" /></label>
 					<Icon onClick={this.handleClick} name="close"/>
 				</div>

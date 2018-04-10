@@ -1,15 +1,51 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import M from 'materialize-css';
 import TableItem from './common/TableItem';
+import Button from './common/Button';
+import Icon from './common/Icon';
 
-export default class MangaInfoCard extends React.Component {
+class MangaInfoCard extends React.Component {
+	constructor(props) {
+		super(props);
+		this.onClick = this.onClick.bind(this);
+	}
+
+	onClick(event) {
+		const {
+			handleFavorite,
+			mangaId,
+			history,
+			favorites,
+			lastRead
+		} = this.props;
+		const { name } = event.target;
+		const url = history.location.pathname + `/${lastRead.lastChapter}`;
+		if (name === 'favorite') handleFavorite(mangaId, favorites);
+		if (name === 'resume') history.push(url);
+	}
 
 	componentDidMount() {
 		M.Collapsible.init(document.querySelector('.collapsible'));
 	}
 	
 	render() {
-		const {name, cover, author, genres, chapters, status, yearOfRelease, lastUpdate, info} = this.props;
+		const {
+			name,
+			cover,
+			author,
+			genres,
+			chapters,
+			status,
+			yearOfRelease,
+			lastUpdate,
+			info,
+			favorites,
+			mangaId,
+			lastRead
+		} = this.props;
+		const isFavorite = favorites.indexOf(mangaId) !== -1;
+		const isStart = lastRead.lastChapter === 1 && lastRead.lastChapter === 1;
 		const style = {
 			maxHeight: "100%",
 			maxWidth: "100%"
@@ -36,6 +72,10 @@ export default class MangaInfoCard extends React.Component {
 						</div>
 					</div>
 				</div>
+				<section className='center-align'>
+					<Button onClick={this.onClick} name='resume'><Icon position='right' name='play_arrow' />{ isStart?'Start':'Resume'}</Button>
+					<Button onClick={this.onClick} name='favorite'><Icon position='right' name={'favorite' + (isFavorite?'':'_border')}/>Favorite</Button>
+				</section>
 				<section>
 					<ul className="collapsible">
 						<li>
@@ -52,3 +92,5 @@ export default class MangaInfoCard extends React.Component {
 		);
 	}
 }
+
+export default withRouter(MangaInfoCard);

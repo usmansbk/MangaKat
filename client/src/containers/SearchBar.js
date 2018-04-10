@@ -1,19 +1,24 @@
-import { connect } from 'react-redux'
-import SearchBar from '../components/dashboard/SearchBar'
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import SearchBar from '../components/dashboard/SearchBar';
 import {searchManga} from '../redux/actions';
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => {
+	return{
+		search: state.search
+	}
+};
 const mapDispatchToProps = dispatch => {
   return {
     find: mangaId => {
-      dispatch(searchManga(mangaId))
+      dispatch(searchManga(mangaId));
     }
   }
 }
 
-const SearchBarContainer = connect(
+const SearchBarContainer = withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(SearchBar)
+)(SearchBar));
 
 export default SearchBarContainer

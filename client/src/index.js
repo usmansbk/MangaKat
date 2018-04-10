@@ -4,19 +4,29 @@ import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import { createStore, applyMiddleware } from 'redux';
+import throttle from 'lodash/throttle';
 import mangakatApp from './redux/reducers';
 import App from './components/App';
+import { saveState, loadState } from './helpers/persistState';
 import './css/materialize.min.css';
 
 const loggerMiddleware = createLogger();
+const persistedState = loadState();
 
+const middlewares = [
+	thunkMiddleware
+];
+
+middlewares.push(loggerMiddleware);
 const store = createStore(
 	mangakatApp,
-	applyMiddleware(
-		thunkMiddleware,
-		loggerMiddleware
-	)
+	persistedState,
+	applyMiddleware(...middlewares)
 );
+
+store.subscribe(throttle(() => {
+	saveState(store.getState());
+}, 1000));
 
 ReactDOM.render(
 	<Provider store={store}>
