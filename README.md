@@ -17,7 +17,7 @@ The dependencies of ths project are managed with npm.
 ```bash
 git clone https://github.com/usmansbk/MangaKat.git
 ```
-+Navigate into the folder name specified
++ Navigate into the folder name specified
 
 ## Installing Packages
 ```bash
@@ -30,7 +30,8 @@ Run `npm start` to initialize and run the webpack development server. Navigate t
 ## Running the app in Production
 To run the app in production build of the app.
 ```bash
-npm run build```
+npm run build
+```
 
 ## LICENSE
 #### [MIT](./LICENSE) [Babakolo Usman Suleiman](https://github.com/usmanskb)
