@@ -4,6 +4,7 @@ import {
   selectManga,
   fetchManga,
   Status,
+  searchManga,
   addFavorite,
   removeFavorite,
 } from '../redux/actions';
@@ -12,9 +13,15 @@ const hasFailed = (status) => (status === Status.FETCH_MANGA_FAILURE);
 const getManga = (mangas, mangaName) => (mangas.byId[mangaName]);
 const getLastRead = (mangas, mangaId) => {
   const manga = mangas[mangaId];
+  let lastChapter = 1;
+  let lastPage = 1;
+  if (manga) {
+    lastPage = manga.lastPage;
+    lastChapter = manga.lastChapter;
+  }
   const result = {
-    lastChapter: manga.lastChapter || 1,
-    lastPage: manga.lastPage || 1
+    lastChapter,
+    lastPage
   }
   return result;
 }
@@ -36,6 +43,7 @@ const mapDispatchToProps = dispatch => {
       const manga = mangas[mangaId];
       const isUpdated = manga && manga.isUpdated
       dispatch(selectManga(mangaId));
+      dispatch(searchManga(''));
       if (!isUpdated) dispatch(fetchManga(mangaId));
     },
     handleFavorite: (mangaId, favorites) => {

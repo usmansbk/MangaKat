@@ -5,18 +5,28 @@ import PageItem from './common/PageItem';
 export default class Pagination extends React.Component {
 	constructor(props) {
 		super(props);
+		const { fetchedItemsCount, itemsPerPage } = this.props;
+		const page = (Math.round(fetchedItemsCount / itemsPerPage) + this.OFFSET) || 1;
 		this.state = {
-			page: 1
+			page
 		};
 		this.onClick = this.onClick.bind(this);
 		this.total = 0;
 		this.OFFSET = 1;
 	}
 
-	componentWillMount() {
-		const { fetchedItemsCount, itemsPerPage } = this.props;
+	refresh(props) {
+		const { fetchedItemsCount, itemsPerPage } = props;
 		const page = (Math.round(fetchedItemsCount / itemsPerPage) + this.OFFSET) || 1;
-		this.setState({ page });
+		this.setState({ page });	
+	}
+
+	componentWillReceiveProps(nextProps) {
+		this.refresh(nextProps);
+	}
+
+	componentWillMount() {
+		this.refresh(this.props);
 	}
 
 	onClick(event) {
@@ -34,7 +44,8 @@ export default class Pagination extends React.Component {
 	}
 
 	render() {
-		const { mangaCount, itemsPerPage } = this.props;
+		let { mangaCount, itemsPerPage, searchFound } = this.props;
+		if (searchFound) mangaCount = searchFound.length;
 		this.total = Math.ceil(mangaCount / itemsPerPage);
 		const { page } = this.state;
 		const disablePrevious = page <= 1;

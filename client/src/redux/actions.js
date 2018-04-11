@@ -27,7 +27,7 @@ export const Status = {
 	FETCH_MANGALIST_FAILURE: 'FETCH_MANGALIST_FAILURE'
 };
 
-
+// eslint-disable-next-line
 const API_ENDPOINT = `https:\//doodle-manga-scraper.p.mashape.com`;
 const API_KEY = 'BkGNvIgwAOmshhxjwHYdr1oJiRGdp1iRA5OjsndoBSE2Gb6Nqr';
 const SOURCE = 'mangareader.net'
@@ -47,6 +47,7 @@ export function updateCount(fetchedItemsCount) {
 		fetchedItemsCount
 	}
 }
+
 export function setStatus(status) {
 	return {
 		type: SET_STATUS,

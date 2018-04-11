@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import SearchBar from '../components/dashboard/SearchBar';
-import {searchManga} from '../redux/actions';
+import {searchManga, updateCount} from '../redux/actions';
 
 const mapStateToProps = state => {
 	return{
@@ -12,6 +12,7 @@ const mapDispatchToProps = dispatch => {
   return {
     find: mangaId => {
       dispatch(searchManga(mangaId));
+      dispatch(updateCount(0));
     }
   }
 }

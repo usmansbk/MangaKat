@@ -126,7 +126,7 @@ function status(state='CLEAR', action) {
 	}
 }
 
-function search(state=null, action) {
+function search(state='', action) {
 	switch(action.type) {
 		case SEARCH_MANGA:
 			return action.mangaId

@@ -6,9 +6,9 @@ export default class Select extends React.Component {
 		M.FormSelect.init(document.querySelectorAll('select'));
 	}
 	render() {
-		const {options, ...rest} = this.props;
+		const {className, multiple, options, ...rest} = this.props;
 		return (
-			<select onChange={this.props.onChange} value={this.props.value} className='browser-default' {...rest}>
+			<select multiple={multiple} onChange={this.props.onChange} value={this.props.value} className={'browser-default' + (className?className:'')} {...rest}>
 				{options}
 			</select>
 		)

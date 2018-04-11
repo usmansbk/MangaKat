@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import ListView from '../components/views/ListView';
-import { fetchMangaList, searchManga } from '../redux/actions';
+import { fetchMangaList, searchManga, updateCount} from '../redux/actions';
 
 const getFetchedItemsCount = mangas => mangas.fetchedItemsCount;
 const getItemsPerPage = mangas => mangas.itemsPerPage;
@@ -12,6 +12,10 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		cancelSearch: () => {
 			dispatch(searchManga(''));
+			dispatch(updateCount(0));
+		},
+		listSearch: (search) => {
+			dispatch(searchManga(search));
 		}
 	}
 }

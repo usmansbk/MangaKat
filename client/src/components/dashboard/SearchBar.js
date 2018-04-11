@@ -7,15 +7,14 @@ export default class SearchBar extends React.Component {
 		this.state = {search: ''};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleClick = this.handleClick.bind(this);
 		this.handleFocus = this.handleFocus.bind(this);
 		this.handleBlur = this.handleBlur.bind(this);
 	}
-
+	
 	componentWillReceiveProps(nextProps) {
 		const {search} = nextProps;
 		this.setState({
-			search
+			search,
 		})
 	}
 
@@ -26,23 +25,15 @@ export default class SearchBar extends React.Component {
 	}
 
 	handleBlur(event) {
-		const { history } = this.props;
+		const { history} = this.props;
 		const { search } = this.state;
 		if (!search) history.goBack();;
 	}
 
 	handleChange(event) {
 		const { find } = this.props;
-		const { value } = event.target
-		this.setState({search: value});
+		const { value } = event.target;
 		find(value);
-	}
-
-	handleClick(event) {
-		const { find, history } = this.props;
-		this.setState({search: ''});
-		history.goBack();
-		find('');
 	}
 
 	handleSubmit(event) {
@@ -58,9 +49,8 @@ export default class SearchBar extends React.Component {
 		return (
 			<form className="right" style={style} onSubmit={this.handleSubmit}>
 				<div className="input-field">
-					<input onBlur={this.handleBlur} onChange={this.handleChange} onFocus={this.handleFocus} value={this.state.search} type="search" name="search" placeholder="Find Manga" required />
+					<input autoComplete='off' onBlur={this.handleBlur} onChange={this.handleChange} onFocus={this.handleFocus} value={this.state.search} type="search" name="search" placeholder="Find Manga" required />
 					<label className="label-icon" htmlFor="search"><Icon name="search" /></label>
-					<Icon onClick={this.handleClick} name="close"/>
 				</div>
 			</form>
 		);

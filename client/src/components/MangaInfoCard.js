@@ -51,7 +51,7 @@ class MangaInfoCard extends React.Component {
 			maxWidth: "100%"
 		}
 		return (
-			<div className="col s12 m6 l6">
+			<div className="col s12 l6">
 				<div className="card horizontal">
 					<div className="card-image">
 						<img alt={name} src={cover} style={style} />
