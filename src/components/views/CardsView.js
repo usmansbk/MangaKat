@@ -13,5 +13,6 @@ export default function CardsView(props) {
 			/>
 		</Link>
 	});
-	return cards;
+	const ret = cards.length ? cards : <h1 className='center-align grey-text lighten-2'>No favorites</h1>
+	return ret;
 }

@@ -1,10 +1,10 @@
 import React from 'react';
-import Maintanance from '../error/Maintanance';
 
 export default class AboutView extends React.Component {
 	render() {
-		const { history } = this.props;
+		// eslint-disable-next-line
 		const facebookPage = 'https:\/\/facebook.com/usmansbk';
+		// eslint-disable-next-line
 		const github = 'https:\/\/github.com/usmansbk';
 		return (
 			<div>

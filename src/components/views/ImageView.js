@@ -110,6 +110,7 @@ export default class ImageView extends React.Component {
 				chapters={this.props.chaptersList} />
 				<NavControls onClick={this.handleClick} />
 				<img
+				onError={() => console.log('Error')}
 				src={url}
 				alt={pageId}
 				style={style} />
