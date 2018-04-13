@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Pagination from '../../containers/Pagination';
-import Filters from '../Filters';
 import Icon from '../common/Icon';
 
 export default class ListView extends React.Component {
@@ -83,7 +82,6 @@ export default class ListView extends React.Component {
 		});
 		return (
 			<div className='col s12 l6 offset-l3' onKeyPress={this.handleKey}>
-				{ search && <Filters /> }
 				<ul className='collection with-header'>
 					<li className='collection-header'>
 						{

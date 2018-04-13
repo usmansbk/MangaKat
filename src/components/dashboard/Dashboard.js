@@ -45,7 +45,7 @@ export default class Dashboard extends React.Component {
 				<div className="container">
 					<div className="row">
 						{
-							failed && <Alert onClick={this.onClick}><b>Failed to retreive manga</b>. Check your internet connection.</Alert>
+							failed && <Alert onClick={this.onClick}><b>Failed to retreive manga</b>. Check your internet connection or URL.</Alert>
 						}
 						{
 							isFetching && <Preloader className='indeterminate' />
