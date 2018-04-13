@@ -1,5 +1,7 @@
 # MangaKat
-[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT) 
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://travis-ci.org/usmansbk/MangaKat.svg?branch=develop)](https://travis-ci.org/usmansbk/MangaKat)
+
 A manga reader progressive web application for reading manga on and offline.
 
 ## Features
