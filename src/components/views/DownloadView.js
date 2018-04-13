@@ -19,11 +19,10 @@ export default class Download extends React.Component {
 	render() {
 		const {mangas, mangaId} = this.props;
 		const manga = mangas[mangaId];
-		const {name, chapters, downloading} = manga;
-		const isDownloading = downloading.length > 0;
-		const items = chapters.sort((a, b) => b.chapterId - a.chapterId)
+		const isDownloading = manga && manga.downloading.length > 0;
+		const items = manga && manga.chapters.sort((a, b) => b.chapterId - a.chapterId)
 			.map((chapter) => {
-				const isDownloading = downloading.indexOf(chapter.chapterId + "") > -1;
+				const isDownloading = manga.downloading.indexOf(chapter.chapterId + "") > -1;
 				return (
 					<DownloadItem
 						key={chapter.chapterId}
@@ -41,7 +40,7 @@ export default class Download extends React.Component {
 				{isDownloading && <Preloader className='indeterminate' />}
 				<ul className='collection with-header'>
 					<li className='collection-header'>
-						<h4>{name}</h4>
+						<h4>{manga && manga.name}</h4>
 					</li>
 					{items}
 				</ul>
