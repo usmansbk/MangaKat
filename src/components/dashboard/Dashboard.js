@@ -6,6 +6,7 @@ import Alert from '../common/Alert';
 import MangaView from '../views/MangaView';
 import ListView from '../../containers/ListView';
 import CardsView from '../../containers/CardsView';
+import DownloadView from '../../containers/DownloadView';
 import AboutView from '../views/AboutView';
 import NoMatch from '../error/NoMatch';
 
@@ -52,6 +53,7 @@ export default class Dashboard extends React.Component {
 						<Switch>
 						<Route exact path='/' component={ListView} />
 						<Route exact path='/favorites' component={CardsView} />
+						<Route exact path='/download/:mangaid' component={DownloadView} />
 						<Route exact path='/about' component={AboutView} />
 						<Route path='/:mangaid' component={MangaView} />
 						<Route component={NoMatch} />

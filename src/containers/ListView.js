@@ -8,13 +8,16 @@ const getItemsPerPage = mangas => mangas.itemsPerPage;
 const mapDispatchToProps = (dispatch) => {
 	return {
 		onEnter: (isInvalidated) => {
-			if (isInvalidated) dispatch(fetchMangaList());
+			if (isInvalidated) {
+				dispatch(fetchMangaList());
+			}
 		},
 		cancelSearch: () => {
 			dispatch(searchManga(''));
 			dispatch(updateCount(0));
 		},
 		listSearch: (search) => {
+			dispatch(updateCount(0));
 			dispatch(searchManga(search));
 		}
 	}

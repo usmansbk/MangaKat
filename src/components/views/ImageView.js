@@ -9,7 +9,7 @@ export default class ImageView extends React.Component {
 		this.state = {
 			pageId: 1,
 			pages: [],
-			name: null
+			name: ''
 		};
 		this.handleClick = this.handleClick.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -18,7 +18,7 @@ export default class ImageView extends React.Component {
 	handleChange(event) {
 		const {name, value} = event.target;
 		this.chapterId = value;
-		const { onEnter, history, isUpdated, chapters, match, saveSession } = this.props;
+		const { onEnter, history, isUpdated, chapters, match, saveSession, mangas } = this.props;
 		const {url} = match;
 		const mangaId = url.substring(1, url.lastIndexOf('/'));
 		if (name === 'chapterId') {
@@ -32,13 +32,13 @@ export default class ImageView extends React.Component {
 		this.setState({
 			[name]: value
 		});
-		saveSession(mangaId, value, this.state.pageId);
+		saveSession(mangaId, value, this.state.pageId, mangas);
 	}
 
 	handleClick(event) {
 		let { name } = event.target;
 		let { pageId } = this.state;
-		const { mangaId, chapterId } = this.props;
+		const { mangaId, chapterId, mangas } = this.props;
 		const { saveSession } = this.props;
 		name = name.toLowerCase();
 		if (name === 'previous') pageId = --pageId 
@@ -46,7 +46,7 @@ export default class ImageView extends React.Component {
 		this.setState({
 			pageId
 		});
-		saveSession(mangaId, chapterId, pageId);
+		saveSession(mangaId, chapterId, pageId, mangas);
 	}
 
 	componentWillMount() {
@@ -57,6 +57,7 @@ export default class ImageView extends React.Component {
 			chapters,
 			lastPage,
 			saveSession,
+			mangas
 		} = this.props;
 		const {url} = match;
 		const mangaId = url.substring(1, url.lastIndexOf('/'));
@@ -71,7 +72,7 @@ export default class ImageView extends React.Component {
 		}
 		const isChapterUpdated = chapter && chapter.isUpdated;
 		onEnter(match.url, mangaId, isUpdated, isChapterUpdated);
-		saveSession(mangaId, currentChapter, this.state.pageId);
+		saveSession(mangaId, currentChapter, this.state.pageId, mangas);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -110,7 +111,6 @@ export default class ImageView extends React.Component {
 				chapters={this.props.chaptersList} />
 				<NavControls onClick={this.handleClick} />
 				<img
-				onError={(e) => {e.target.src='/sample-1.jpg'}}
 				src={url}
 				alt={pageId}
 				style={style} />

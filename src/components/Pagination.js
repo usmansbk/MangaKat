@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon from './common/Icon';
-import PageItem from './common/PageItem';
+import Button from './common/Button';
 
 export default class Pagination extends React.Component {
 	constructor(props) {
@@ -30,7 +30,6 @@ export default class Pagination extends React.Component {
 	}
 
 	onClick(event) {
-		event.preventDefault();
 		const {name} = event.currentTarget;
 		let { page } = this.state;
 		const { updateFetchedItemsCount, itemsPerPage } = this.props;
@@ -38,7 +37,7 @@ export default class Pagination extends React.Component {
 		else if (name === 'next' && page < this.total) page += 1;
 		else if (name === 'last_page' && page < this.total) page = this.total;
 		else if (name === 'first_page' && page > 1) page = 1;
-
+		console.log(name, page, itemsPerPage);
 		this.setState({ page })
 		updateFetchedItemsCount(page - this.OFFSET, itemsPerPage);
 	}
@@ -56,13 +55,13 @@ export default class Pagination extends React.Component {
 		}
 		if (!mangaCount) return null;
 		return (
-			<ul className="pagination center-align">
-				<PageItem title='First page' onClick={this.onClick} className={disablePrevious && 'disabled'} name="first_page"><Icon name='first_page' /></PageItem>
-				<PageItem title='Previous page' onClick={this.onClick} className={disablePrevious && 'disabled'} name="previous"><Icon name='chevron_left' /></PageItem>
-				<p style={pStyle}>{`${page}/${this.total}`}</p>
-				<PageItem title='Next page' onClick={this.onClick} className={disableNext && 'disabled'} name="next"><Icon name='chevron_right' /></PageItem>
-				<PageItem title='Last page' onClick={this.onClick} className={disableNext && 'disabled'} name="last_page"><Icon name='last_page' /></PageItem>
-			</ul>
+			<div className="pagination center-align">
+				<Button title='First page' onClick={this.onClick} className={disablePrevious && 'disabled'} name="first_page"><Icon name='first_page' /></Button>
+				<Button title='Previous page' onClick={this.onClick} className={disablePrevious && 'disabled'} name="previous"><Icon name='chevron_left' /></Button>
+				<p style={pStyle} className='flow-text'>{`${page}/${this.total}`}</p>
+				<Button title='Next page' onClick={this.onClick} className={disableNext && 'disabled'} name="next"><Icon name='chevron_right' /></Button>
+				<Button title='Last page' onClick={this.onClick} className={disableNext && 'disabled'} name="last_page"><Icon name='last_page' /></Button>
+			</div>
 		);
 	}
 }

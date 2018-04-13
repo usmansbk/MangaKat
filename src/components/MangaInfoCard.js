@@ -23,6 +23,7 @@ class MangaInfoCard extends React.Component {
 		const url = history.location.pathname + `/${lastRead.lastChapter}`;
 		if (name === 'favorite') handleFavorite(mangaId, favorites);
 		if (name === 'resume') history.push(url);
+		if (name === 'download') history.push(`/download/${mangaId}`);
 	}
 
 	componentDidMount() {
@@ -75,6 +76,7 @@ class MangaInfoCard extends React.Component {
 				<section className='center-align'>
 					<Button onClick={this.onClick} name='resume'><Icon position='right' name='play_arrow' />{ isStart?'Start':'Resume'}</Button>
 					<Button onClick={this.onClick} name='favorite'><Icon position='right' name={'favorite' + (isFavorite?'':'_border')}/>Favorite</Button>
+					<Button onClick={this.onClick} name='download'><Icon position='right' name={'save'}/>Save Offline</Button>
 				</section>
 				<section>
 					<ul className="collapsible">

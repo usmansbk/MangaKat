@@ -21,6 +21,8 @@ const getUpdateStatus = (mangas, mangaId) => {
 }
 
 const getLastPage = (mangas, mangaId) => {
+	const manga = mangas[mangaId];
+	if (!manga) return 1;
 	return mangas[mangaId].lastPage || 1;
 }
 const mapStateToProps = (state) => {
@@ -32,7 +34,8 @@ const mapStateToProps = (state) => {
 		chapters: getChapters(state.chapters),
 		chaptersList: getList(state.mangas.byId, state.selectedManga),
 		isUpdated: getUpdateStatus(state.mangas.byId, state.selectedManga),
-		lastPage: getLastPage(state.mangas.byId, state.selectedManga)
+		lastPage: getLastPage(state.mangas.byId, state.selectedManga),
+		mangas: state.mangas.byId
 	}
 }
 
@@ -45,8 +48,9 @@ const mapDispatchToProps = dispatch => {
 			if (!isChapterUpdated) dispatch(fetchChapter(url));
 			if (!isUpdated) dispatch(fetchManga(mangaId));
 		},
-		saveSession(mangaId, chapterId, pageId) {
-			dispatch(saveSession(mangaId, chapterId, pageId))
+		saveSession(mangaId, chapterId, pageId, mangas) {
+			const manga = mangas[mangaId];
+			if (manga) dispatch(saveSession(mangaId, chapterId, pageId))
 		}
 	}
 }

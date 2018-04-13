@@ -17,7 +17,7 @@ const middlewares = [
 	thunkMiddleware
 ];
 
-process.env.NODE_ENV || middlewares.push(loggerMiddleware);
+middlewares.push(loggerMiddleware);
 const store = createStore(
 	mangakatApp,
 	persistedState,

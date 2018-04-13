@@ -38,7 +38,7 @@ export default class ListView extends React.Component {
 			this.handleSearch(search);
 		}
 	}
-
+ 
 	handleSearch(search) {
 		const {listSearch} = this.props;
 		listSearch(search);
@@ -55,10 +55,9 @@ export default class ListView extends React.Component {
 
 	onClick(event) {
 		event.preventDefault();
-		const { cancelSearch, history } = this.props;
+		const { cancelSearch } = this.props;
 		cancelSearch();
 		this.setState({search: ''});
-		history.goBack();
 	}
 
 	componentWillMount() {

@@ -3,6 +3,7 @@ import {
 	SELECT_MANGA,
 	SELECT_CHAPTER,
 	SET_STATUS,
+	SET_IMAGE,
 	REQUEST_MANGA,
 	RECEIVE_MANGA,
 	REQUEST_MANGALIST,
@@ -14,13 +15,15 @@ import {
 	SAVE_LAST_SESSION,
 	SEARCH_MANGA,
 	UPDATE_COUNT,
+	REQUEST_DOWNLOAD,
+	RECEIVE_DOWNLOAD,
 } from './actions';
 
 function mangas(state = {
 	isFetching: false,
 	isInvalidated: true,
 	fetchedItemsCount: 0,
-	itemsPerPage: 50,
+	itemsPerPage: 15,
 	byId: {},
 	ids: [],
 }, action) {
@@ -39,6 +42,7 @@ function mangas(state = {
 				byId: Object.assign({}, state.byId, {
 					[action.mangaId]: Object.assign({}, state.byId[action.mangaId],Object.assign({}, action.manga, {
 						mangaId: action.mangaId,
+						downloading: [],
 						isUpdated: true,
 						lastPage: action.pageId || 1,
 						lastChapter: action.chapterId || 1,
@@ -48,7 +52,7 @@ function mangas(state = {
 			});
 		case REQUEST_MANGALIST:
 			return Object.assign({}, state, {
-				isInvalidated: false,
+				isInvalidated: true,
 				isFetching: true
 			});
 		case RECEIVE_MANGALIST:
@@ -57,6 +61,22 @@ function mangas(state = {
 				isInvalidated: false,
 				byId: action.byId,
 				ids: action.ids
+			});
+		case RECEIVE_DOWNLOAD:
+			return Object.assign({}, state, {
+				byId: Object.assign({}, state.byId, {
+					[action.mangaId]: Object.assign({}, state.byId[action.mangaId], {
+						downloading: [...(new Set(state.byId[action.mangaId].downloading)).delete(action.chapterId)]
+					})
+				})
+			})
+		case REQUEST_DOWNLOAD:
+			return Object.assign({}, state, {
+				byId: Object.assign({}, state.byId, {
+					[action.mangaId]: Object.assign({}, state.byId[action.mangaId], {
+						downloading: [...(new Set(state.byId[action.mangaId].downloading)).add(action.chapterId)]
+					})
+				})
 			})
 		default:
 			return state
@@ -80,10 +100,29 @@ function chapters(state = {
 						isUpdated: true
 					})
 				}),
+			});
+		case SET_IMAGE:
+			return Object.assign({}, state, {
+				byId: Object.assign({}, state.byId, {
+					[action.chapterUrl]: Object.assign({}, state.byId[action.chapterUrl], {
+						pages: setImage(state.byId[action.chapterUrl], action.pageId, action.imageUrl)
+					})
+				})
 			})
 		default:
 			return state
 	}
+} 
+
+function setImage(chapter, pageId, imageUrl) {
+	const pages = chapter.pages;
+	let ret = [];
+	if (pages) {
+		ret = [...pages];
+		ret[pageId].url = imageUrl;
+		return ret;
+	}
+	return chapter;
 }
 
 function favorites(state = [], action) {

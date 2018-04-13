@@ -13,6 +13,6 @@ export default function CardsView(props) {
 			/>
 		</Link>
 	});
-	const ret = cards.length ? cards : <h1 className='center-align grey-text lighten-2'>No favorites</h1>
+	const ret = cards.length ? cards : <h1 className='center-align grey-text lighten-2'>No Favorited Manga</h1>
 	return ret;
 }

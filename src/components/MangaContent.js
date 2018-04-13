@@ -1,6 +1,6 @@
 import React from 'react';
 import MangaInfoCard from './MangaInfoCard';
-import ChapterList from './ChapterList';
+import ChapterList from '../containers/ChapterList';
 
 export default class MangaContent extends React.Component {
 	componentWillMount() {
@@ -11,8 +11,7 @@ export default class MangaContent extends React.Component {
 	}
 
 	render() {
-		const { manga, match} = this.props;
-		const chapters = manga && manga.chapters
+		const {manga} = this.props;
 		return	(
 			<React.Fragment>
 				<MangaInfoCard
@@ -22,7 +21,7 @@ export default class MangaContent extends React.Component {
 				 favorites={this.props.favorites}
 				 lastRead={this.props.lastRead}
 				 {...manga }/>
-				<ChapterList chapters={chapters || []} match={match} />
+				<ChapterList />
 			</React.Fragment>
 		)
 	}

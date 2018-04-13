@@ -4,7 +4,10 @@ import Icon from '../common/Icon';
 export default class SearchBar extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {search: ''};
+		this.state = {
+			search: '',
+			typing: ''
+		};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleFocus = this.handleFocus.bind(this);
@@ -15,6 +18,7 @@ export default class SearchBar extends React.Component {
 		const {search} = nextProps;
 		this.setState({
 			search,
+			typing: search
 		})
 	}
 
@@ -27,17 +31,22 @@ export default class SearchBar extends React.Component {
 	handleBlur(event) {
 		const { history} = this.props;
 		const { search } = this.state;
-		if (!search) history.goBack();;
+		if (!search) history.goBack();
 	}
 
 	handleChange(event) {
 		const { find } = this.props;
 		const { value } = event.target;
+		this.setState({typing: value})
 		find(value);
 	}
 
 	handleSubmit(event) {
 		event.preventDefault();
+		const { find, history } = this.props;
+		console.log(this.state.typing);
+		history.push('/')
+		find(this.state.typing);
 	}
 
 	render() {

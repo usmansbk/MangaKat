@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Fab from './common/Fab';
+import Icon from './common/Icon';
 
 export default class ChapterList extends React.Component {
 	constructor(props) {
@@ -19,15 +20,17 @@ export default class ChapterList extends React.Component {
 		});
 	}
 
+
 	render () {
-		let { chapters, match } = this.props;
+		const { match, chapters } = this.props;
 		let direction = this.state.location === 'down' ? 'up' : 'down';
-		chapters = chapters && chapters.map((chapter, index) => (
+		let chaptersLinks = chapters.map((chapter, index) => (
 			<Link
 			className='collection-item'
 			key={index}
 			to={`${match.url}/${chapter.chapterId}`}>
-				CH. {chapter.chapterId}: {chapter.name && chapter.name } 
+				CH. {chapter.chapterId}: {chapter.name && chapter.name }
+				<Icon title='Available offline' name='offline_pin' position='right' />
 			</Link>
 		));
 
@@ -37,7 +40,7 @@ export default class ChapterList extends React.Component {
 					<h5 id='up'>Chapters</h5>
 				</div>
 				<div className="collection">
-					{chapters}
+					{chaptersLinks}
 				</div>
 				<div id='down'></div>
 				<Fab href={`#${this.state.location}`} name={`arrow_${direction}ward`} onClick={this.onClick} />

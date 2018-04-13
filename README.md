@@ -9,7 +9,7 @@ Read saved manga offline
 Save you from pointless network reloads
 
 ## Requirements
-To run this project, you'll need to install node 5 and above. The latest version of Node.js is recommended.
+To run this project, you'll need to install node. The latest version of Node.js is recommended.
 The dependencies of ths project are managed with npm.
 
 ## Setting up
