@@ -58,7 +58,6 @@ export default class ListView extends React.Component {
 		const { target } = event;
 		const sort = target.name;
 		const { sortBy } = this.props;
-		console.log(sort);
 		sortBy(sort);
 	}
 
