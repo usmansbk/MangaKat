@@ -48,7 +48,7 @@ export default class ListView extends React.Component {
 	handleKey(event) {
 		const {key, target} = event;
 		let {search} = this.state;
-		if (key !== 'Enter' && target.name !== 'search') {
+		if (key !== 'Enter' && target.name !== 'search' && key !== 'Backspace') {
 			search += key;
 			this.handleSearch(search);
 		}
