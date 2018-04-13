@@ -3,10 +3,11 @@ import { Route, Switch } from 'react-router-dom';
 import Nav from './Nav';
 import Preloader from '../common/Preloader';
 import Alert from '../common/Alert';
-import MangaView from '../views/MangaView';
+import MangaView from '../../containers/MangaView';
 import ListView from '../../containers/ListView';
 import CardsView from '../../containers/CardsView';
 import DownloadView from '../../containers/DownloadView';
+import PageView from '../../containers/PageView';
 import AboutView from '../views/AboutView';
 import NoMatch from '../error/NoMatch';
 
@@ -55,7 +56,8 @@ export default class Dashboard extends React.Component {
 						<Route exact path='/favorites' component={CardsView} />
 						<Route exact path='/download/:mangaid' component={DownloadView} />
 						<Route exact path='/about' component={AboutView} />
-						<Route path='/:mangaid' component={MangaView} />
+						<Route exact path='/:mangaid' component={MangaView} />
+						<Route exact path='/:mangaid/:chapterId/:pageid' component={PageView} />
 						<Route component={NoMatch} />
 						</Switch>
 					</div>

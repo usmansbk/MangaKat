@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import MangaContent from '../components/MangaContent'
+import MangaView from '../components/views/MangaView'
 import {
   selectManga,
   fetchManga,
@@ -39,7 +39,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onEnter: (mangaId, mangas) => {
+    refresh: (mangaId, mangas) => {
       const manga = mangas[mangaId];
       const isUpdated = manga && manga.isUpdated
       dispatch(selectManga(mangaId));
@@ -53,9 +53,9 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const MangaContentContainer = connect(
+const MangaViewContainer = connect(
 	mapStateToProps,
   mapDispatchToProps
-)(MangaContent)
+)(MangaView)
 
-export default MangaContentContainer
+export default MangaViewContainer

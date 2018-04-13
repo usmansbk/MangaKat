@@ -1,20 +1,28 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import MangaContent from '../../containers/MangaContent';
-import ImageView from '../../containers/ImageView';
+import MangaInfoCard from '../MangaInfoCard';
+import ChapterList from '../../containers/ChapterList';
 
-export default function MangaView({match}) {
-	return (
-		<Switch>
-		<Route
-		exact
-		path={match.url}
-		component={MangaContent}/>
+export default class MangaContent extends React.Component {
+	componentWillMount() {
+		const { history, refresh, mangas } = this.props;
+		const mangaUrl = history.location.pathname;
+		this.id = mangaUrl.substring(1);
+		refresh(this.id, mangas);
+	}
 
-		<Route
-		path={`${match.url}/:chapter`}
-		component={ImageView}
-		/>
-		</Switch>
-	);
+	render() {
+		const {manga} = this.props;
+		return	(
+			<React.Fragment>
+				<MangaInfoCard
+				 mangaId={this.id}
+				 handleFavorite={this.props.handleFavorite}
+				 handleResume={this.props.handleResume}
+				 favorites={this.props.favorites}
+				 lastRead={this.props.lastRead}
+				 {...manga }/>
+				<ChapterList />
+			</React.Fragment>
+		)
+	}
 }

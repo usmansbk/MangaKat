@@ -200,7 +200,7 @@ export function fetchChapter(chapterUrl) {
 				}
 			})
 			.then(json => {
-				if (!json) throw new Error(Status.FETCH_CHAPTER_FAILURE);
+				if (!json || Object.keys(json).length === 0) throw new Error(Status.FETCH_CHAPTER_FAILURE);
 				return dispatch(receiveChapter(chapterUrl, json))
 			})
 			.catch(error => dispatch(setStatus(Status.FETCH_CHAPTER_FAILURE)));

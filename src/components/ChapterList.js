@@ -28,7 +28,7 @@ export default class ChapterList extends React.Component {
 			<Link
 			className='collection-item'
 			key={index}
-			to={`${match.url}/${chapter.chapterId}`}>
+			to={`${match.url}/${chapter.chapterId}/1`}>
 				CH. {chapter.chapterId}: {chapter.name && chapter.name }
 				{ chapter.isDownloaded && <Icon title='Available offline' name='offline_pin' position='right' /> }
 			</Link>

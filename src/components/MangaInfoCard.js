@@ -20,9 +20,9 @@ class MangaInfoCard extends React.Component {
 			lastRead
 		} = this.props;
 		const { name } = event.target;
-		const url = history.location.pathname + `/${lastRead.lastChapter}`;
+		const url = history.location.pathname + `/${lastRead.lastChapter || 1}`;
 		if (name === 'favorite') handleFavorite(mangaId, favorites);
-		if (name === 'resume') history.push(url);
+		if (name === 'resume') history.push(`${url}/${lastRead.lastPage || 1}`);
 		if (name === 'download') history.push(`/download/${mangaId}`);
 	}
 

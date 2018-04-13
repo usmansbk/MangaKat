@@ -13,6 +13,7 @@ const mapDispatchToProps = (dispatch) => {
 			}
 		},
 		cancelSearch: () => {
+			dispatch(selectSort())
 			dispatch(searchManga(''));
 			dispatch(updateCount(0));
 		},
