@@ -32,7 +32,7 @@ export default class PageView extends React.Component {
 	handleClick(event) {
 		const {name} = event.target;
 		const {mangaId, pageId, chapterId} = this.state;
-		const { history } = this.props;
+		const { history, saveSession } = this.props;
 		let nextPage = +pageId;
 		let nextChapter = +chapterId;
 		if (name === 'previous') {
@@ -57,9 +57,9 @@ export default class PageView extends React.Component {
 			nextChapter = this.numberOfChapters;
 			nextPage = this.pages.length;
 		}
-
 		const newUrl = `/${mangaId}/${nextChapter}/${nextPage}`;
 		history.push(newUrl);
+		saveSession(mangaId, chapterId, pageId);
 	}
 
 	parseUrl(url) {
@@ -69,7 +69,7 @@ export default class PageView extends React.Component {
 	}
 
 	loadPage(props) {
-		const { history, chapters, setPage, loadManga, loadChapter, manga} = props;
+		const { history, chapters, setPage, loadManga, loadChapter, manga, saveSession} = props;
 		const url = history.location.pathname;
 		this.url = url;
 		const tokens = this.parseUrl(url);
@@ -82,6 +82,7 @@ export default class PageView extends React.Component {
 		this.setState({mangaId, chapterId, pageId});
 		if (!manga.isUpdated) loadManga(mangaId);
 		if (!this.currentChapter.isUpdated) loadChapter(this.chapterUrl);
+		saveSession(mangaId, chapterId, pageId, manga);
 	}
 
 	componentWillMount() {
