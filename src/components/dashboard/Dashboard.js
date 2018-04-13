@@ -10,6 +10,7 @@ import DownloadView from '../../containers/DownloadView';
 import PageView from '../../containers/PageView';
 import AboutView from '../views/AboutView';
 import NoMatch from '../error/NoMatch';
+import Error from '../error/Error';
 
 export default class Dashboard extends React.Component {
 	constructor(props) {
@@ -41,7 +42,7 @@ export default class Dashboard extends React.Component {
 	render() {
 		const { isFetching, failed } = this.state
 		return (
-			<React.Fragment>
+			<Error>
 				<Nav/>
 				<div className="container">
 					<div className="row">
@@ -62,7 +63,7 @@ export default class Dashboard extends React.Component {
 						</Switch>
 					</div>
 				</div>
-			</React.Fragment>
+			</Error>
 		);
 	}
 }
