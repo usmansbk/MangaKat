@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import NavControls from '../common/NavControls';
 import JumpNav from '../common/JumpNav';
+import Preloader from '../common/Preloader';
 
 export default class PageView extends React.Component {
 	constructor(props) {
@@ -17,6 +18,11 @@ export default class PageView extends React.Component {
 		this.pages = [];
 		this.handleClick = this.handleClick.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.onLoadImage = this.onLoadImage.bind(this);
+	}
+
+	onLoadImage(event) {
+		this.setState({isLoadingImage: false});
 	}
 
 	handleChange(event) {
@@ -57,6 +63,7 @@ export default class PageView extends React.Component {
 			nextChapter = this.numberOfChapters;
 			nextPage = this.pages.length;
 		}
+		this.setState({isLoadingImage: true})
 		const newUrl = `/${mangaId}/${nextChapter}/${nextPage}`;
 		history.push(newUrl);
 		saveSession(mangaId, chapterId, pageId);
@@ -124,7 +131,9 @@ export default class PageView extends React.Component {
 				pages={pages}
 				chapters={manga.chapters} />
 				<NavControls onClick={this.handleClick} />
+				{ this.state.isLoadingImage && <Preloader className='indeterminate'/> }
 				<img
+				onLoad={this.onLoadImage}
 				src={url}
 				alt={pageId}
 				style={this.style} />
