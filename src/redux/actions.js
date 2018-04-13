@@ -20,6 +20,7 @@ export const SAVE_LAST_SESSION = 'SAVE_LAST_SESSION';
 export const REQUEST_DOWNLOAD = 'REQUEST_DOWNLOAD';
 export const RECEIVE_DOWNLOAD = 'RECEIVE_DOWNLOAD';
 export const SET_IMAGE = 'SET_IMAGE';
+export const SORT_BY = 'SORT_BY';
 
 export const Status = {
 	CLEAR: 'CLEAR',
@@ -41,6 +42,13 @@ export const Status = {
 const API_ENDPOINT = `https:\//doodle-manga-scraper.p.mashape.com`;
 const API_KEY = 'BkGNvIgwAOmshhxjwHYdr1oJiRGdp1iRA5OjsndoBSE2Gb6Nqr';
 const SOURCE = 'mangareader.net';
+
+export function selectSort(sort) {
+	return {
+		type: SORT_BY,
+		sort
+	}
+}
 
 export function saveSession(mangaId, chapterId, pageId) {
 	return {

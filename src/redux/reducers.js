@@ -17,12 +17,14 @@ import {
 	UPDATE_COUNT,
 	REQUEST_DOWNLOAD,
 	RECEIVE_DOWNLOAD,
+	SORT_BY
 } from './actions';
 
 function mangas(state = {
 	isFetching: false,
 	isInvalidated: true,
 	fetchedItemsCount: 0,
+	sort: false,
 	itemsPerPage: 15,
 	byId: {},
 	ids: [],
@@ -77,6 +79,10 @@ function mangas(state = {
 						downloading: [...(new Set(state.byId[action.mangaId].downloading)).add(action.chapterId)]
 					})
 				})
+			})
+		case SORT_BY:
+			return Object.assign({}, state, {
+				sort: !state.sort
 			})
 		default:
 			return state

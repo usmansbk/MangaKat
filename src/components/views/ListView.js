@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Pagination from '../../containers/Pagination';
+import Filters from '../Filters';
 import Icon from '../common/Icon';
 
 export default class ListView extends React.Component {
@@ -12,6 +13,7 @@ export default class ListView extends React.Component {
 		this.onClick = this.onClick.bind(this);
 		this.handleKey = this.handleKey.bind(this);
 		this.backspace = this.backspace.bind(this);
+		this.handleFilter = this.handleFilter.bind(this);
 	}
 
 	componentDidMount() {
@@ -52,6 +54,14 @@ export default class ListView extends React.Component {
 		}
 	}
 
+	handleFilter(event) {
+		const { target } = event;
+		const sort = target.name;
+		const { sortBy } = this.props;
+		console.log(sort);
+		sortBy(sort);
+	}
+
 	onClick(event) {
 		event.preventDefault();
 		const { cancelSearch } = this.props;
@@ -59,19 +69,23 @@ export default class ListView extends React.Component {
 		this.setState({search: ''});
 	}
 
+
 	componentWillMount() {
 		const { onEnter, isInvalidated } = this.props;
 		onEnter(isInvalidated);
 	}
 
 	render() {
-		let { mangas, search, fetchedItemsCount, itemsPerPage } = this.props;
+		let { mangas, search, fetchedItemsCount, itemsPerPage, sort } = this.props;
 		let mappedMangas = Object.values(mangas.byId).map((manga) => ({
 			name: manga.name.trim(),
 			mangaId: manga.mangaId
 		}));
 		if (search) {
 			mappedMangas = mappedMangas.filter(manga => manga.name.toLowerCase().includes(search.toLowerCase()));
+		}
+		if (sort) {
+			mappedMangas = mappedMangas.filter(manga => manga.name.toLowerCase().startsWith(search.toLowerCase()));
 		}
 		const cards = mappedMangas.sort((a, b) => a.name.localeCompare(b.name)).slice(fetchedItemsCount, fetchedItemsCount + itemsPerPage).map((manga, index) => {
 			return (
@@ -82,6 +96,7 @@ export default class ListView extends React.Component {
 		});
 		return (
 			<div className='col s12 l6 offset-l3' onKeyPress={this.handleKey}>
+				{ search && <Filters onClick={this.handleFilter} /> }
 				<ul className='collection with-header'>
 					<li className='collection-header'>
 						{
@@ -91,6 +106,7 @@ export default class ListView extends React.Component {
 						}
 					</li>
 					{cards}
+					{ (search && cards.length === 0) && <h3 className='center-align blue-text'>Not found</h3>}
 				</ul>
 				<Pagination />
 			</div>

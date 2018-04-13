@@ -7,8 +7,18 @@ export default class Filters extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			values: 'all'
+			values: 'all',
+			toggle: true
 		}
+		this.onClick = this.onClick.bind(this);
+	}
+
+	onClick(event) {
+		const { onClick } = this.props;
+		this.setState({
+			toggle: !this.state.toggle
+		});
+		onClick(event);
 	}
 
 	componentWillMount() {
@@ -18,8 +28,7 @@ export default class Filters extends React.Component {
 	render() {
 		return (
 			<div className="section">
-				<Button disabled={true} title="Genres">Genres<Icon position='right' name='group_work' /></Button>
-				<span className="blue-text">Requires internet connection</span>
+				<Button className={!this.state.toggle && 'btn-flat'} title="Alphabetically" name='alpha' onClick={this.onClick}>Sort<Icon position='right' name='sort_by_alpha' /></Button>
 			</div>
 		);
 	}
