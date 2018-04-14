@@ -35,7 +35,8 @@ const mapStateToProps = (state) => {
 		fetchedItemsCount: getFetchedItemsCount(state.mangas),
 		itemsPerPage: getItemsPerPage(state.mangas),
 		isInvalidated: state.mangas.isInvalidated,
-		sort: state.mangas.sort
+		sort: state.mangas.sort,
+		favorites: state.favorites
 	}
 }
 

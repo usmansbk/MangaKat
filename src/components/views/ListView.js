@@ -75,7 +75,7 @@ export default class ListView extends React.Component {
 	}
 
 	render() {
-		let { mangas, search, fetchedItemsCount, itemsPerPage, sort } = this.props;
+		let { mangas, search, fetchedItemsCount, itemsPerPage, sort, favorites } = this.props;
 		let mappedMangas = Object.values(mangas.byId).map((manga) => ({
 			name: manga.name.trim(),
 			mangaId: manga.mangaId
@@ -87,9 +87,11 @@ export default class ListView extends React.Component {
 			mappedMangas = mappedMangas.filter(manga => manga.name.toLowerCase().startsWith(search.toLowerCase()));
 		}
 		const cards = mappedMangas.sort((a, b) => a.name.localeCompare(b.name)).slice(fetchedItemsCount, fetchedItemsCount + itemsPerPage).map((manga, index) => {
+			const isFavorite = favorites.indexOf(manga.mangaId) >= 0;
 			return (
 				<Link key={index} to={manga.mangaId} className='collection-item'>
 					{manga.name}
+					{ isFavorite && <Icon name='favorite_border' position='right' />}
 				</Link>
 			)
 		});
