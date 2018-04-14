@@ -45,10 +45,15 @@ export default class ListView extends React.Component {
 		listSearch(search);
 	}
 
+	// Firefox compatibility
+	testKey(key) {
+		return (key.length === 1)
+	}
+
 	handleKey(event) {
 		const {key, target} = event;
 		let {search} = this.state;
-		if (key !== 'Enter' && target.name !== 'search' && key !== 'Backspace') {
+		if (key !== 'Enter' && target.name !== 'search' && this.testKey(key)) {
 			search += key;
 			this.handleSearch(search);
 		}
