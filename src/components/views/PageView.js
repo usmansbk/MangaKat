@@ -38,7 +38,9 @@ export default class PageView extends React.Component {
 	handleClick(event) {
 		const {name} = event.target;
 		const key = event.key;
-		if (!name && key !== 'ArrowLeft' && key !== 'ArrowRight') return;
+		console.log(name, key);
+	
+		if( !name && key !== 'ArrowLeft' && key !== 'ArrowRight') return;
 
 		const {mangaId, pageId, chapterId} = this.state;
 		const { history, saveSession } = this.props;
@@ -103,6 +105,10 @@ export default class PageView extends React.Component {
 		document.addEventListener('keydown', this.handleClick)
 	}
 
+	componentWillUnmount() {
+		document.removeEventListener('keydown', this.handleClick);
+	}
+
 	componentWillMount() {
 		this.loadPage(this.props);
 	}
@@ -131,7 +137,7 @@ export default class PageView extends React.Component {
 		const page = pages[pageId-1];
 		const url = page && page.url;
 		return (
-			<div className="col m12">
+			<div className="col m12" id='up'>
 				<h5 className='truncate' title={name}>
 				<Link to={mangaLink}>{name}</Link> - Chapter {chapterId}: {this.currentChapter.name} <span className='green-text'>Page {pageId}</span>
 				</h5>
