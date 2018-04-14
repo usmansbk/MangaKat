@@ -16,7 +16,7 @@ export default class Nav extends React.Component {
 		return (
 			<header>
 			<div className="navbar-fixed">
-				<nav>
+				<nav className='teal darken-4'>
 					<div className="nav-wrapper">
 						<Logo/>
 						<Menu/>

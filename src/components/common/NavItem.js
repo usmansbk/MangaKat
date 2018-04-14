@@ -8,7 +8,7 @@ export default function NavItem({className, icon, link, children, ...rest}) {
 			<NavLink 
 			exact
 			to={link}
-			activeClassName="red"
+			activeClassName="teal darken-1"
 			className={className}
 			{...rest}>
 				<Icon position="left" name={icon}  />
