@@ -97,7 +97,7 @@ export default class ListView extends React.Component {
 		});
 		return (
 			<div className='col s12 l6 offset-l3' onKeyPress={this.handleKey}>
-				{ search && <Filters onClick={this.handleFilter} /> }
+				<Filters onClick={this.handleFilter} />
 				<ul className='collection with-header'>
 					<li className='collection-header'>
 						{

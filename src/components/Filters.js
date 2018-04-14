@@ -27,8 +27,10 @@ export default class Filters extends React.Component {
 
 	render() {
 		return (
-			<div className="section">
-				<Button className={!this.state.toggle && 'btn-flat'} title="Alphabetically" name='alpha' onClick={this.onClick}>Sort<Icon position='right' name='sort_by_alpha' /></Button>
+			<div className="section center-align">
+				<Button className={!this.state.toggle && 'btn-flat'} title="Sort alphabetically" name='alpha' onClick={this.onClick}>Alphabetical<Icon position='right' name='sort_by_alpha' /></Button>
+				<Button className='disabled' title='Popularity' name='Sort by popularity'>Popularity<Icon position='right' name='whatshot' /></Button>
+				<Button className='disabled' title='Genres' name='Filter genres'>Genres<Icon position='right' name='group_work' /></Button>
 			</div>
 		);
 	}

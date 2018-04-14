@@ -23,6 +23,7 @@ export default class PageView extends React.Component {
 
 	onLoadImage(event) {
 		this.setState({isLoadingImage: false});
+		document.scrollingElement.scrollTop = 0;
 	}
 
 	handleChange(event) {
@@ -136,7 +137,7 @@ export default class PageView extends React.Component {
 		const page = pages[pageId-1];
 		const url = page && page.url;
 		return (
-			<div className="col m12" id='up'>
+			<div className="col m12">
 				<h5 className='truncate' title={name}>
 				<Link to={mangaLink}>{name}</Link> - Chapter {chapterId}: {this.currentChapter.name} <span className='green-text'>Page {pageId}</span>
 				</h5>
@@ -153,6 +154,7 @@ export default class PageView extends React.Component {
 				src={url}
 				alt={pageId}
 				style={this.style} />
+				{ this.state.isLoadingImage && <Preloader className='indeterminate'/> }
 				<NavControls onClick={this.handleClick} />
 			</div>
 		);

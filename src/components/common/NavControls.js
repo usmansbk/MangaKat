@@ -10,8 +10,8 @@ export default function NavControls(props) {
 
 	return (
 		<div className="right" style={style}>
-			<Button href='#up' name='previous' onClick={onClick} >Previous</Button>
-			<Button href='#up' name='next' onClick={onClick} >Next</Button>
+			<Button name='previous' onClick={onClick} >Previous</Button>
+			<Button name='next' onClick={onClick} >Next</Button>
 		</div>
 	);
 }
