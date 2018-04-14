@@ -30,7 +30,7 @@ export default class Nav extends React.Component {
 				</nav>
 			</div>
 			<NavList className="sidenav" id="mobile">
-				<NavHeader>MangaKat</NavHeader>
+				<NavHeader className='teal darken-4'>MangaKat</NavHeader>
 				<NavItem className='sidenav-close' icon="home" link="/">Home</NavItem>
 				<NavItem className='sidenav-close' icon="favorite" link="/favorites">Favorites</NavItem>
 				<NavItem className='sidenav-close' icon="help" link="/about">About Us</NavItem>
