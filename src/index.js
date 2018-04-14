@@ -8,8 +8,10 @@ import throttle from 'lodash/throttle';
 import mangakatApp from './redux/reducers';
 import App from './components/App';
 import { saveState, loadState } from './helpers/persistState';
+import registerServiceWorker from './registerServiceWorker';
 import './css/materialize.min.css';
 
+registerServiceWorker();
 const loggerMiddleware = createLogger();
 const persistedState = loadState();
 
