@@ -37,14 +37,16 @@ export default class PageView extends React.Component {
 
 	handleClick(event) {
 		const {name} = event.target;
+		const key = event.key;
 		const {mangaId, pageId, chapterId} = this.state;
 		const { history, saveSession } = this.props;
 		let nextPage = +pageId;
 		let nextChapter = +chapterId;
-		if (name === 'previous') {
+		let isLoadingImage = true;
+		if (name === 'previous' || key === 'ArrowLeft') {
 			nextPage -= 1;
 		}
-		if (name === 'next') {
+		if (name === 'next' || key === 'ArrowRight') {
 			nextPage += 1;
 		}
 		if (nextPage < 1) {
@@ -58,16 +60,19 @@ export default class PageView extends React.Component {
 		if (nextChapter < 1) {
 			nextChapter = 1;
 			nextPage = 1;
+			isLoadingImage = false;
 		}
 		if (nextChapter > this.numberOfChapters) {
 			nextChapter = this.numberOfChapters;
 			nextPage = this.pages.length;
+			isLoadingImage = false;
 		}
-		this.setState({isLoadingImage: true})
+		this.setState({isLoadingImage})
 		const newUrl = `/${mangaId}/${nextChapter}/${nextPage}`;
 		history.push(newUrl);
 		saveSession(mangaId, chapterId, pageId);
 	}
+
 
 	parseUrl(url) {
 		const urlRegex = /\/(\S+)\/(\d+)\/(\d+)/;
@@ -90,6 +95,10 @@ export default class PageView extends React.Component {
 		if (!manga.isUpdated) loadManga(mangaId);
 		if (!this.currentChapter.isUpdated) loadChapter(this.chapterUrl);
 		saveSession(mangaId, chapterId, pageId, manga);
+	}
+
+	componentDidMount() {
+		document.addEventListener('keydown', this.handleClick)
 	}
 
 	componentWillMount() {
