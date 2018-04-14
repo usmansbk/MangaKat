@@ -38,6 +38,8 @@ export default class PageView extends React.Component {
 	handleClick(event) {
 		const {name} = event.target;
 		const key = event.key;
+		if (!name && key !== 'ArrowLeft' && key !== 'ArrowRight') return;
+
 		const {mangaId, pageId, chapterId} = this.state;
 		const { history, saveSession } = this.props;
 		let nextPage = +pageId;
