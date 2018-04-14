@@ -29,15 +29,24 @@ export default class Pagination extends React.Component {
 		this.refresh(this.props);
 	}
 
+	componentDidMount() {
+		document.addEventListener('keydown', this.onClick);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('keydown', this.onClick);
+	}
+
 	onClick(event) {
 		const {name} = event.currentTarget;
+		const { key } = event;
+		if (!name && key !== 'ArrowLeft' && key !== 'ArrowRight') return;
 		let { page } = this.state;
 		const { updateFetchedItemsCount, itemsPerPage } = this.props;
-		if (name === 'previous' && page > 1) page -= 1;
-		else if (name === 'next' && page < this.total) page += 1;
+		if ((name === 'previous' || key === 'ArrowLeft') && page > 1) page -= 1;
+		else if ((name === 'next' || key === 'ArrowRight') && page < this.total) page += 1;
 		else if (name === 'last_page' && page < this.total) page = this.total;
 		else if (name === 'first_page' && page > 1) page = 1;
-		console.log(name, page, itemsPerPage);
 		this.setState({ page })
 		updateFetchedItemsCount(page - this.OFFSET, itemsPerPage);
 	}
