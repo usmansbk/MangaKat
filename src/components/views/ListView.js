@@ -80,29 +80,40 @@ export default class ListView extends React.Component {
 	}
 
 	render() {
-		let { mangas, search, fetchedItemsCount, itemsPerPage, sort, favorites } = this.props;
-		let mappedMangas = Object.values(mangas.byId).map((manga) => ({
-			name: manga.name.trim(),
-			mangaId: manga.mangaId
-		}));
+		let {
+			mangas,
+			search,
+			fetchedItemsCount,
+			itemsPerPage,
+			sort,
+			favorites,
+			filters
+		} = this.props;
+		let mappedMangas = Object.values(mangas.byId).map((manga) => manga);
+		if (filters.length) {
+			mappedMangas = mappedMangas.filter(manga => filters.every(genre => manga.genres && manga.genres.includes(genre)));
+		}
 		if (search) {
-			mappedMangas = mappedMangas.filter(manga => manga.name.toLowerCase().includes(search.toLowerCase()));
+			mappedMangas = mappedMangas.filter(manga => manga.name.trim().toLowerCase().includes(search.toLowerCase()));
 		}
 		if (sort) {
-			mappedMangas = mappedMangas.filter(manga => manga.name.toLowerCase().startsWith(search.toLowerCase()));
+			mappedMangas = mappedMangas.filter(manga => manga.name.trim().toLowerCase().startsWith(search.toLowerCase()));
 		}
-		const cards = mappedMangas.sort((a, b) => a.name.localeCompare(b.name)).slice(fetchedItemsCount, fetchedItemsCount + itemsPerPage).map((manga, index) => {
-			const isFavorite = favorites.indexOf(manga.mangaId) >= 0;
-			return (
-				<Link key={index} to={manga.mangaId} className='collection-item'>
-					{manga.name}
-					{ isFavorite && <Icon name='favorite_border' position='right' />}
-				</Link>
-			)
-		});
+		const cards = mappedMangas
+			.sort((a, b) => a.name.trim().localeCompare(b.name.trim()))
+			.slice(fetchedItemsCount, fetchedItemsCount + itemsPerPage)
+			.map((manga, index) => {
+				const isFavorite = favorites.indexOf(manga.mangaId) >= 0;
+				return (
+					<Link key={index} to={manga.mangaId} className='collection-item'>
+						{manga.name}
+						{ isFavorite && <Icon name='favorite_border' position='right' />}
+					</Link>
+				)
+			});
 		return (
-			<div className='col s12 l6 offset-l3' onKeyPress={this.handleKey}>
-				<Filters onClick={this.handleFilter} />
+			<div className='col s12 l6 offset-l3'>
+				<Filters onClick={this.handleFilter} resetFilters={this.props.resetFilters} />
 				<ul className='collection with-header'>
 					<li className='collection-header'>
 						{
@@ -114,7 +125,7 @@ export default class ListView extends React.Component {
 					{cards}
 					{ (search && cards.length === 0) && <h3 className='center-align blue-text'>Not found</h3>}
 				</ul>
-				<Pagination />
+				<Pagination mangaCount={mappedMangas.length} />
 			</div>
 		);
 	}

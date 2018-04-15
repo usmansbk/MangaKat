@@ -1,8 +1,9 @@
 import React from 'react';
+import Badge from './common/Badge';
 
 export default class MangaCard extends React.Component {
 	render() {
-		const {img, mangaTitle} = this.props;
+		const {img, mangaTitle, newChapters} = this.props;
 		const style = {
 			height: "200px",
 			padding: "4px"
@@ -22,7 +23,9 @@ export default class MangaCard extends React.Component {
 						}
 					}
 					>
-						<span className="truncate">{mangaTitle}</span>
+						<span className="truncate">{mangaTitle}
+						{ newChapters && <Badge>{newChapters}</Badge> }
+						</span>
 					</div>
 				</div>
 			</div>

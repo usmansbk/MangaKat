@@ -8,8 +8,13 @@ export default function Logo(props) {
 		className="brand-logo hide-on-med-and-down"
 		style={{marginLeft: '20px'}}
 		>
-			<img src='/favicon.ico' width='32' height='32' style={{verticalAlign: 'middle',marginRight: '10px' }}/>
-			MangaKat
+			<img
+				alt='MangaKat - Manga reader app'
+				src='/favicon.ico'
+				width='32'
+				height='32'
+				style={{verticalAlign: 'middle',marginRight: '10px' }}/>
+			MangaKat [beta]
 		</Link>
 	);
 }

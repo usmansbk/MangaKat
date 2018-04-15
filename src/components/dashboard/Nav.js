@@ -4,6 +4,7 @@ import Menu from '../common/Menu';
 import NavList from '../common/NavList';
 import NavItem from '../common/NavItem';
 import NavHeader from '../common/NavHeader';
+import Badge from '../common/Badge';
 import SearchBar from '../../containers/SearchBar';
 import M from 'materialize-css';
 
@@ -13,6 +14,7 @@ export default class Nav extends React.Component {
 	}
 
 	render() {
+		const { newChapters } = this.props;
 		return (
 			<header>
 			<div className="navbar-fixed">
@@ -22,7 +24,7 @@ export default class Nav extends React.Component {
 						<Menu/>
 						<NavList className="right hide-on-med-and-down">
 							<NavItem icon="home" link="/">Home</NavItem>
-							<NavItem icon="favorite" link="/favorites">Favorites</NavItem>
+							<NavItem icon="favorite" link="/favorites">Favorites{newChapters && <Badge>{newChapters}</Badge>}</NavItem>
 							<NavItem icon="help" link="/about">About</NavItem>
 						</NavList>
 						<SearchBar />
@@ -32,8 +34,8 @@ export default class Nav extends React.Component {
 			<NavList className="sidenav" id="mobile">
 				<NavHeader className='teal darken-4'>MangaKat</NavHeader>
 				<NavItem className='sidenav-close' icon="home" link="/">Home</NavItem>
-				<NavItem className='sidenav-close' icon="favorite" link="/favorites">Favorites</NavItem>
-				<NavItem className='sidenav-close' icon="help" link="/about">About Us</NavItem>
+				<NavItem className='sidenav-close' icon="favorite" link="/favorites">Favorites{newChapters && <Badge>{newChapters}</Badge>}</NavItem>
+				<NavItem className='sidenav-close' icon="help" link="/about">About</NavItem>
 			</NavList>
 			</header>
 		);

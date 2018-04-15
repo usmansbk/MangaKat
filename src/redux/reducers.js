@@ -17,14 +17,28 @@ import {
 	UPDATE_COUNT,
 	REQUEST_DOWNLOAD,
 	RECEIVE_DOWNLOAD,
+	RECEIVE_GENRE,
+	RECEIVE_GENRE_MANGALIST,
+	REQUEST_GENRE_MANGALIST,
+	ADD_FILTER,
+	REMOVE_FILTER,
+	CLEAR_FILTER,
 	SORT_BY
 } from './actions';
+
+function _updateGenres(state, ids, mangas) {
+	ids.forEach(id => {
+		state[id] = Object.assign({}, state[id], mangas[id])
+	});
+	return state;
+}
 
 function mangas(state = {
 	isFetching: false,
 	isInvalidated: true,
 	fetchedItemsCount: 0,
 	sort: false,
+	genres: [],
 	itemsPerPage: 15,
 	byId: {},
 	ids: [],
@@ -34,7 +48,11 @@ function mangas(state = {
 			return Object.assign({}, state, {
 				fetchedItemsCount: action.fetchedItemsCount
 			});
-		case REQUEST_MANGA:
+		case RECEIVE_GENRE:
+			return Object.assign({}, state, {
+				genres: [...(new Set(state.genres)).add(action.genreid)]
+			});
+		case REQUEST_MANGA: case REQUEST_GENRE_MANGALIST:
 			return Object.assign({}, state, {
 				isFetching: true,
 			});
@@ -51,6 +69,12 @@ function mangas(state = {
 					}))
 				}),
 				ids: [...(new Set(state.ids)).add(action.mangaId)]
+			});
+		case RECEIVE_GENRE_MANGALIST:
+			return Object.assign({}, state, {
+				isFetching: false,
+				byId: _updateGenres(state.byId, state.ids, action.byId),
+				ids: [...(new Set(state.ids.concat(action.ids)))]
 			});
 		case REQUEST_MANGALIST:
 			return Object.assign({}, state, {
@@ -180,6 +204,21 @@ function search(state='', action) {
 	}
 }
 
+function filters(state=[], action) {
+	switch(action.type) {
+		case ADD_FILTER:
+			return [...(new Set(state)).add(action.genreid)];
+		case REMOVE_FILTER:
+			let s = new Set(state);
+			s.delete(action.genreid);
+			return [...s];
+		case CLEAR_FILTER:
+			return []
+		default:
+			return state
+	}
+}
+
 const mangaApp = combineReducers({
 	favorites,
 	selectedManga,
@@ -187,7 +226,8 @@ const mangaApp = combineReducers({
 	search,
 	chapters,
 	mangas,
-	status
+	status,
+	filters
 });
 
 export default mangaApp

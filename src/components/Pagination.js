@@ -52,8 +52,7 @@ export default class Pagination extends React.Component {
 	}
 
 	render() {
-		let { mangaCount, itemsPerPage, searchFound } = this.props;
-		if (searchFound) mangaCount = searchFound.length;
+		let { mangaCount, itemsPerPage } = this.props;
 		this.total = Math.ceil(mangaCount / itemsPerPage);
 		const { page } = this.state;
 		const disablePrevious = page <= 1;

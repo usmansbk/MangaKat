@@ -19,8 +19,14 @@ export const UNFAVORITE_MANGA = 'UNFAVORITE_MANGA';
 export const SAVE_LAST_SESSION = 'SAVE_LAST_SESSION';
 export const REQUEST_DOWNLOAD = 'REQUEST_DOWNLOAD';
 export const RECEIVE_DOWNLOAD = 'RECEIVE_DOWNLOAD';
+export const RECEIVE_GENRE_MANGALIST = 'RECEIVE_GENRE_MANGALIST';
+export const REQUEST_GENRE_MANGALIST = 'REQUEST_GENRE_MANGALIST';
+export const RECEIVE_GENRE = 'RECEIVE_GENRE';
 export const SET_IMAGE = 'SET_IMAGE';
 export const SORT_BY = 'SORT_BY';
+export const ADD_FILTER = 'ADD_FILTER';
+export const REMOVE_FILTER = 'REMOVE_FILTER';
+export const CLEAR_FILTER = 'CLEAR_FILTER';
 
 export const Status = {
 	CLEAR: 'CLEAR',
@@ -47,6 +53,12 @@ export function selectSort(sort) {
 	return {
 		type: SORT_BY,
 		sort
+	}
+}
+
+export function clearFilter() {
+	return {
+		type: CLEAR_FILTER
 	}
 }
 
@@ -159,6 +171,7 @@ function receiveDownload(mangaId, chapterId) {
 		chapterId
 	}
 }
+
 function requestDownload(mangaId, chapterId) {
 	return {
 		type: REQUEST_DOWNLOAD,
@@ -166,12 +179,49 @@ function requestDownload(mangaId, chapterId) {
 		chapterId
 	}
 }
+
 function setImage(chapterUrl, pageId, imageUrl) {
 	return {
 		type: SET_IMAGE,
 		chapterUrl,
 		pageId,
 		imageUrl
+	}
+}
+
+function receiveMangaGenreList(byId, ids) {
+	return {
+		type: RECEIVE_GENRE_MANGALIST,
+		byId,
+		ids
+	}
+}
+
+function requestMangaGenreList(genreid) {
+	return {
+		type: REQUEST_GENRE_MANGALIST,
+		genreid
+	}
+}
+
+function receiveGenre(genreid) {
+	return {
+		type: RECEIVE_GENRE,
+		genreid
+	}
+}
+
+export function addFilter(genreid) {
+	return {
+		type: ADD_FILTER,
+		genreid
+	}
+}
+
+export function removeFilter(genreid) {
+	return {
+		type: REMOVE_FILTER,
+		genreid
 	}
 }
 
@@ -226,6 +276,29 @@ export function fetchManga(mangaId) {
 	}
 }
 
+export function fetchMangaListByGenre(genreid) {
+	const url = `${API_ENDPOINT}/${SOURCE}/search/genres/${genreid}`;
+	return dispatch => {
+		dispatch(requestMangaGenreList(genreid));
+		dispatch(setStatus(Status.FETCHING));
+		return apiRequest(url)
+			.then(response => {
+				if (!response.ok) throw new Error(Status.FETCH_MANGALIST_FAILURE);
+				dispatch(setStatus(Status.FETCH_MANGALIST_SUCCESS));
+				return response.json();
+			})
+			.then(json => {
+				if (!json) throw new Error(Status.FETCH_MANGALIST_FAILURE);
+				const normalizedList = normalizeList(json);
+				const byId = normalizedList.entities.manga;
+				const ids = normalizedList.result;
+				return dispatch(receiveMangaGenreList(byId, ids));
+			})
+			.then(() => dispatch(receiveGenre(genreid)))
+			.catch(error => dispatch(setStatus(Status.FETCH_MANGALIST_FAILURE)));
+	}
+}
+
 export function fetchMangaList() {
 	const url = `${API_ENDPOINT}/${SOURCE}?cover=1&info=1`;
 	return dispatch => {
@@ -238,10 +311,10 @@ export function fetchMangaList() {
 				return response.json();
 			})
 			.then(json => {
+				if (!json) throw new Error(Status.FETCH_MANGALIST_FAILURE);
 				const normalizedList = normalizeList(json);
 				const byId = normalizedList.entities.manga;
 				const ids = normalizedList.result;
-				if (!json) throw new Error(Status.FETCH_MANGALIST_FAILURE);
 				return dispatch(receiveMangaList(byId, ids));
 			})
 			.catch(error => dispatch(setStatus(Status.FETCH_MANGALIST_FAILURE)));

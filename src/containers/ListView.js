@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import ListView from '../components/views/ListView';
-import { fetchMangaList, searchManga, updateCount, selectSort} from '../redux/actions';
+import { fetchMangaList, searchManga, updateCount, selectSort, clearFilter} from '../redux/actions';
 
 const getFetchedItemsCount = mangas => mangas.fetchedItemsCount;
 const getItemsPerPage = mangas => mangas.itemsPerPage;
@@ -24,6 +24,9 @@ const mapDispatchToProps = (dispatch) => {
 		sortBy: (sort) => {
 			dispatch(selectSort(sort));
 			dispatch(updateCount(0));
+		},
+		resetFilters: () => {
+			dispatch(clearFilter());
 		}
 	}
 }
@@ -36,7 +39,8 @@ const mapStateToProps = (state) => {
 		itemsPerPage: getItemsPerPage(state.mangas),
 		isInvalidated: state.mangas.isInvalidated,
 		sort: state.mangas.sort,
-		favorites: state.favorites
+		favorites: state.favorites,
+		filters: state.filters
 	}
 }
 
