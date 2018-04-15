@@ -29,6 +29,7 @@ export const REMOVE_FILTER = 'REMOVE_FILTER';
 export const CLEAR_FILTER = 'CLEAR_FILTER';
 export const MARK_AS_READ = 'MARK_AS_READ';
 export const CLEAR_NOTIFICATION = 'CLEAR_NOTIFICATION';
+export const NOTIFY = 'NOTIFY';
 
 export const Status = {
 	CLEAR: 'CLEAR',
@@ -55,6 +56,12 @@ export function selectSort(sort) {
 	return {
 		type: SORT_BY,
 		sort
+	}
+}
+
+export function notify() {
+	return {
+		type: NOTIFY
 	}
 }
 

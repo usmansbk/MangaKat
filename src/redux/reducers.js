@@ -25,6 +25,7 @@ import {
 	CLEAR_FILTER,
 	MARK_AS_READ,
 	CLEAR_NOTIFICATION,
+	NOTIFY,
 	SORT_BY
 } from './actions';
 
@@ -80,7 +81,6 @@ function mangas(state = {
 						newChapters: getNewChapters(action.manga.chapters, state.byId[action.mangaId].chapters),
 					}))
 				}),
-				unread: true,
 				ids: [...(new Set(state.ids)).add(action.mangaId)]
 			});		
 		case MARK_AS_READ:
@@ -93,6 +93,10 @@ function mangas(state = {
 					})
 				})
 			})
+		case NOTIFY:
+			return Object.assign({}, state, {
+				unread: true
+			});
 		case CLEAR_NOTIFICATION:
 			return Object.assign({}, state, {
 				unread: false
