@@ -42,7 +42,7 @@ function getNewChapters(newChapters, oldChapters) {
 	const oldLength = oldChapters.length;
 	let start = newLength - oldLength;
 	if (!start) start = newLength;
-	const ret = newChapters.slice(0).map(chapter => chapter.chapterId);
+	const ret = newChapters.slice(start).map(chapter => chapter.chapterId);
 	return ret;
 }
 

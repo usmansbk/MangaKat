@@ -39,6 +39,11 @@ export default class Dashboard extends React.Component {
 		})
 	}
 
+	componentWillMount() {
+		const { fetchUpdates, favorites } = this.props;
+		fetchUpdates(favorites);
+	}
+
 	render() {
 		const { isFetching, failed } = this.state
 		const { hasUnread } = this.props;

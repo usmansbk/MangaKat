@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Dashboard from '../components/dashboard/Dashboard';
-import { Status, setStatus } from '../redux/actions';
+import { Status, setStatus, fetchManga } from '../redux/actions';
 
 const isFetching = (status) => {
 	return (status === Status.FETCHING);
@@ -19,13 +19,18 @@ const mapStateToProps = (state) => {
 	return {
 		isFetching: getFetching(state.mangas, state.chapters, state.status),
 		failed: getStatus(state.status),
-		hasUnread: state.mangas.unread
+		hasUnread: state.mangas.unread,
+		favorites: state.favorites,
 	}
 }
 
 const mapDispatchToProps = (dispatch) => {
 	return {
 		clearError: () => dispatch(setStatus(Status.CLEAR)),
+		fetchUpdates: (favorites) => {
+			console.log('Checking for updates');
+			favorites.forEach(mangaId => dispatch(fetchManga(mangaId)));
+		}
 	}
 }
 
