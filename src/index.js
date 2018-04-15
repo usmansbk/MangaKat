@@ -10,7 +10,7 @@ import App from './components/App';
 import { saveState, loadState, deleteState } from './helpers/persistState';
 import register from './registerServiceWorker';
 import './css/materialize.min.css';
-const currentVersion = '1.0.1';
+const currentVersion = '1.0.2';
 
 register();
 const loggerMiddleware = createLogger();

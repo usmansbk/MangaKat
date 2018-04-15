@@ -259,7 +259,7 @@ function filters(state=[], action) {
 	}
 }
 
-function version(state='1.0.1', action) {
+function version(state='1.0.2', action) {
 	return state;
 }
 const mangaApp = combineReducers({
