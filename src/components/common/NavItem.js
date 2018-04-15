@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import Icon from './Icon';
 
-export default function NavItem({className, icon, link, children, ...rest}) {
+export default function NavItem({className, icon, link, children, color, ...rest}) {
 	return (
 		<li>
 			<NavLink 
@@ -11,7 +11,7 @@ export default function NavItem({className, icon, link, children, ...rest}) {
 			activeClassName="teal darken-1"
 			className={className}
 			{...rest}>
-				<Icon position="left" name={icon}  />
+				<Icon position={"left " + color } name={icon}  />
 				{children}
 			</NavLink>
 		</li>

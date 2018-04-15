@@ -41,9 +41,10 @@ export default class Dashboard extends React.Component {
 
 	render() {
 		const { isFetching, failed } = this.state
+		const { hasUnread } = this.props;
 		return (
 			<Error>
-				<Nav/>
+				<Nav hasUnread={hasUnread} />
 				<div className="container">
 					<div className="row">
 						{

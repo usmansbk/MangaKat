@@ -2,6 +2,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import ChapterList from '../components/ChapterList';
 
+const getNewChapters = (mangas, mangaId) => {
+  const manga = mangas[mangaId];
+  if (!manga.newChapters) return [];
+  return manga.newChapters;
+}
+
 const getChapters = (mangas, mangaId) => {
 	const manga = mangas[mangaId];
 	if (!manga) return [];
@@ -12,7 +18,8 @@ const getChapters = (mangas, mangaId) => {
 
 const mapStateToProps = (state) => {
 	return {
-		chapters: getChapters(state.mangas.byId, state.selectedManga)
+		chapters: getChapters(state.mangas.byId, state.selectedManga),
+		newChapters: getNewChapters(state.mangas.byId, state.selectedManga)
 	}
 }
 

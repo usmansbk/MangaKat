@@ -4,6 +4,7 @@ import Badge from './common/Badge';
 export default class MangaCard extends React.Component {
 	render() {
 		const {img, mangaTitle, newChapters} = this.props;
+		const hasNew = newChapters && newChapters.length > 0;
 		const style = {
 			height: "200px",
 			padding: "4px"
@@ -23,9 +24,19 @@ export default class MangaCard extends React.Component {
 						}
 					}
 					>
-						<span className="truncate">{mangaTitle}
-						{ newChapters && <Badge>{newChapters}</Badge> }
-						</span>
+						<div className='row'>
+							<div className='col s10'>
+								<span className="truncate">
+									{mangaTitle}
+								</span>
+							</div>
+							{hasNew ?
+							<div className='col s2'>
+								<Badge>{newChapters.length}</Badge>
+							</div>
+							: null
+							}
+						</div>
 					</div>
 				</div>
 			</div>

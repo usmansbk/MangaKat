@@ -27,7 +27,7 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		resetFilters: () => {
 			dispatch(clearFilter());
-		}
+		},
 	}
 }
 

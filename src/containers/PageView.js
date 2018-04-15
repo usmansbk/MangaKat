@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import PageView from '../components/views/PageView';
-import {fetchChapter, fetchManga, selectManga, selectChapter, saveSession} from '../redux/actions';
+import {fetchChapter, fetchManga, selectManga, selectChapter, saveSession, markRead} from '../redux/actions';
 
 const getManga = (mangas, mangaId) => {
 	const manga = mangas[mangaId] || {};
@@ -28,6 +28,9 @@ const mapDispatchToProps = dispatch => {
 		},
 		loadChapter: (chapterUrl) => {
 			dispatch(fetchChapter(chapterUrl));
+		},
+		markAsRead: (mangaId, chapterId) => {
+			dispatch(markRead(mangaId, chapterId));
 		}
 	}
 }

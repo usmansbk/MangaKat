@@ -2,7 +2,7 @@ import React from 'react';
 import MangaInfoCard from '../MangaInfoCard';
 import ChapterList from '../../containers/ChapterList';
 
-export default class MangaContent extends React.Component {
+export default class MangaView extends React.Component {
 	componentWillMount() {
 		const { history, refresh, mangas } = this.props;
 		const mangaUrl = history.location.pathname;

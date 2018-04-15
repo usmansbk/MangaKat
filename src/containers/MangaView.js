@@ -11,6 +11,7 @@ import {
 
 const hasFailed = (status) => (status === Status.FETCH_MANGA_FAILURE);
 const getManga = (mangas, mangaName) => (mangas.byId[mangaName]);
+
 const getLastRead = (mangas, mangaId) => {
   const manga = mangas[mangaId];
   let lastChapter = 1;

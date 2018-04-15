@@ -23,6 +23,8 @@ import {
 	ADD_FILTER,
 	REMOVE_FILTER,
 	CLEAR_FILTER,
+	MARK_AS_READ,
+	CLEAR_NOTIFICATION,
 	SORT_BY
 } from './actions';
 
@@ -31,6 +33,16 @@ function _updateGenres(state, ids, mangas) {
 		state[id] = Object.assign({}, state[id], mangas[id])
 	});
 	return state;
+}
+
+function getNewChapters(newChapters, oldChapters) {
+	if (!oldChapters) return [];
+	const newLength = newChapters.length;
+	const oldLength = oldChapters.length;
+	let start = newLength - oldLength;
+	if (!start) start = newLength;
+	const ret = newChapters.slice(0).map(chapter => chapter.chapterId);
+	return ret;
 }
 
 function mangas(state = {
@@ -42,6 +54,7 @@ function mangas(state = {
 	itemsPerPage: 15,
 	byId: {},
 	ids: [],
+	unread: false,
 }, action) {
 	switch(action.type) {
 		case UPDATE_COUNT:
@@ -56,7 +69,7 @@ function mangas(state = {
 			return Object.assign({}, state, {
 				isFetching: true,
 			});
-		case RECEIVE_MANGA: case SAVE_LAST_SESSION:
+		case RECEIVE_MANGA:
 			return Object.assign({}, state, {
 				isFetching: false,
 				byId: Object.assign({}, state.byId, {
@@ -64,12 +77,35 @@ function mangas(state = {
 						mangaId: action.mangaId,
 						downloading: [],
 						isUpdated: true,
+						newChapters: getNewChapters(action.manga.chapters, state.byId[action.mangaId].chapters),
+					}))
+				}),
+				unread: true,
+				ids: [...(new Set(state.ids)).add(action.mangaId)]
+			});		
+		case MARK_AS_READ:
+			let s = new Set(state.byId[action.mangaId].newChapters);
+			s.delete(+action.chapterId);
+			return Object.assign({}, state, {
+				byId: Object.assign({}, state.byId, {
+					[action.mangaId]: Object.assign({}, state.byId[action.mangaId], {
+						newChapters: [...s]
+					})
+				})
+			})
+		case CLEAR_NOTIFICATION:
+			return Object.assign({}, state, {
+				unread: false
+			})
+		case SAVE_LAST_SESSION:
+			return Object.assign({}, state, {
+				byId: Object.assign({}, state.byId, {
+					[action.mangaId]: Object.assign({}, state.byId[action.mangaId], Object.assign({}, action.manga, {
 						lastPage: action.pageId || 1,
 						lastChapter: action.chapterId || 1,
 					}))
-				}),
-				ids: [...(new Set(state.ids)).add(action.mangaId)]
-			});
+				})
+			})
 		case RECEIVE_GENRE_MANGALIST:
 			return Object.assign({}, state, {
 				isFetching: false,
@@ -107,7 +143,7 @@ function mangas(state = {
 		case SORT_BY:
 			return Object.assign({}, state, {
 				sort: !state.sort
-			})
+			});
 		default:
 			return state
 	}
@@ -127,7 +163,7 @@ function chapters(state = {
 				isFetching: false,
 				byId: Object.assign({}, state.byId, {
 					[action.chapterId]: Object.assign({}, action.chapter, {
-						isUpdated: true
+						isUpdated: true,
 					})
 				}),
 			});

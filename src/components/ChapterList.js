@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Fab from './common/Fab';
 import Icon from './common/Icon';
+import Badge from './common/Badge';
 
 export default class ChapterList extends React.Component {
 	constructor(props) {
@@ -23,17 +24,21 @@ export default class ChapterList extends React.Component {
 
 
 	render () {
-		const { match, chapters } = this.props;
+		let { match, chapters, newChapters } = this.props;
 		let direction = this.state.location === 'down' ? 'up' : 'down';
-		let chaptersLinks = chapters.map((chapter, index) => (
-			<Link
-			className='collection-item'
-			key={index}
-			to={`${match.url}/${chapter.chapterId}/1`}>
-				CH. {chapter.chapterId}: {chapter.name && chapter.name }
-				{ chapter.isDownloaded && <Icon title='Available offline' name='offline_pin' position='right' /> }
-			</Link>
-		));
+		let chaptersLinks = chapters.map((chapter, index) => {
+			const isNew = newChapters.includes(chapter.chapterId);
+			return (
+				<Link
+				className='collection-item'
+				key={index}
+				to={`${match.url}/${chapter.chapterId}/1`}>
+					CH. {chapter.chapterId}: {chapter.name && chapter.name }
+					{ chapter.isDownloaded && <Icon title='Available offline' name='offline_pin' position='right' /> }
+					{ isNew ? <Badge /> : null}
+				</Link>
+			)
+		});
 
 		return (
 			<div className="col s12 m6 l6">

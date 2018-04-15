@@ -85,7 +85,7 @@ export default class PageView extends React.Component {
 	}
 
 	loadPage(props) {
-		const { history, chapters, setPage, loadManga, loadChapter, manga, saveSession} = props;
+		const { history, chapters, setPage, loadManga, loadChapter, manga, saveSession, markAsRead} = props;
 		const url = history.location.pathname;
 		this.url = url;
 		const tokens = this.parseUrl(url);
@@ -98,6 +98,7 @@ export default class PageView extends React.Component {
 		this.setState({mangaId, chapterId, pageId});
 		if (!manga.isUpdated) loadManga(mangaId);
 		if (!this.currentChapter.isUpdated) loadChapter(this.chapterUrl);
+		markAsRead(mangaId, chapterId);
 		saveSession(mangaId, chapterId, pageId, manga);
 	}
 

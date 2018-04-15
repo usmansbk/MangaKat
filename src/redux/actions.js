@@ -27,6 +27,8 @@ export const SORT_BY = 'SORT_BY';
 export const ADD_FILTER = 'ADD_FILTER';
 export const REMOVE_FILTER = 'REMOVE_FILTER';
 export const CLEAR_FILTER = 'CLEAR_FILTER';
+export const MARK_AS_READ = 'MARK_AS_READ';
+export const CLEAR_NOTIFICATION = 'CLEAR_NOTIFICATION';
 
 export const Status = {
 	CLEAR: 'CLEAR',
@@ -53,6 +55,12 @@ export function selectSort(sort) {
 	return {
 		type: SORT_BY,
 		sort
+	}
+}
+
+export function clearNotification() {
+	return {
+		type: CLEAR_NOTIFICATION
 	}
 }
 
@@ -225,6 +233,14 @@ export function removeFilter(genreid) {
 	}
 }
 
+export function markRead(mangaId, chapterId) {
+	return {
+		type: MARK_AS_READ,
+		mangaId,
+		chapterId
+	}
+}
+
 function apiRequest(url) {
 	return fetch(url, {
 		mode: 'cors',
@@ -242,14 +258,15 @@ export function fetchChapter(chapterUrl) {
 		dispatch(setStatus(Status.FETCHING));
 		return apiRequest(url)
 			.then(response => {
-				if (response.ok) {
-					dispatch(setStatus(Status.FETCH_CHAPTER_SUCCESS));
+					if (!response.ok) throw new Error(Status.FETCH_CHAPTER_FAILURE);
 					return response.json();
-				} else {
-					throw new Error(Status.FETCH_CHAPTER_FAILURE);
-				}
 			})
-			.then(json => dispatch(receiveChapter(chapterUrl, json)))
+			.then(json => {
+				console.log('CHAPTER', json);
+				if (!json) throw new Error(Status.FETCH_CHAPTER_FAILURE);
+				return dispatch(receiveChapter(chapterUrl, json))
+			})
+			.then(() => dispatch(setStatus(Status.FETCH_CHAPTER_SUCCESS)))
 			.catch(error => dispatch(setStatus(Status.FETCH_CHAPTER_FAILURE)));
 	}
 }
@@ -262,10 +279,10 @@ export function fetchManga(mangaId) {
 		return apiRequest(url)
 			.then(response => {
 				if (!response.ok) throw new Error(Status.FETCH_MANGA_FAILURE);
-				dispatch(setStatus(Status.FETCH_MANGA_SUCCESS));
 				return response.json();
 			})
 			.then(json => dispatch(receiveManga(mangaId, json)))
+			.then(() => dispatch(setStatus(Status.FETCH_MANGA_SUCCESS)))
 			.catch(error => dispatch(setStatus(Status.FETCH_MANGA_FAILURE)));
 	}
 }
@@ -278,7 +295,6 @@ export function fetchMangaListByGenre(genreid) {
 		return apiRequest(url)
 			.then(response => {
 				if (!response.ok) throw new Error(Status.FETCH_MANGALIST_FAILURE);
-				dispatch(setStatus(Status.FETCH_MANGALIST_SUCCESS));
 				return response.json();
 			})
 			.then(json => {
@@ -288,6 +304,7 @@ export function fetchMangaListByGenre(genreid) {
 				return dispatch(receiveMangaGenreList(byId, ids));
 			})
 			.then(() => dispatch(receiveGenre(genreid)))
+			.then(() => dispatch(setStatus(Status.FETCH_MANGALIST_SUCCESS)))
 			.catch(error => dispatch(setStatus(Status.FETCH_MANGALIST_FAILURE)));
 	}
 }
@@ -300,7 +317,6 @@ export function fetchMangaList() {
 		return apiRequest(url)
 			.then(response => {
 				if (!response.ok) throw new Error(Status.FETCH_MANGALIST_FAILURE);
-				dispatch(setStatus(Status.FETCH_MANGALIST_SUCCESS));
 				return response.json();
 			})
 			.then(json => {
@@ -309,6 +325,7 @@ export function fetchMangaList() {
 				const ids = normalizedList.result;
 				return dispatch(receiveMangaList(byId, ids));
 			})
+			.then(() => dispatch(setStatus(Status.FETCH_MANGALIST_SUCCESS)))
 			.catch(error => dispatch(setStatus(Status.FETCH_MANGALIST_FAILURE)));
 	}
 }

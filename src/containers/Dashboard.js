@@ -18,7 +18,8 @@ const getStatus = (status) => {
 const mapStateToProps = (state) => {
 	return {
 		isFetching: getFetching(state.mangas, state.chapters, state.status),
-		failed: getStatus(state.status)
+		failed: getStatus(state.status),
+		hasUnread: state.mangas.unread
 	}
 }
 
