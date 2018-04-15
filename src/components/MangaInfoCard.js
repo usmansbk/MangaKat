@@ -46,7 +46,8 @@ class MangaInfoCard extends React.Component {
 			lastRead
 		} = this.props;
 		const isFavorite = favorites.indexOf(mangaId) !== -1;
-		const isStart = lastRead.lastChapter === 1 && lastRead.lastChapter === 1;
+		const { lastPage, lastChapter } = lastRead;
+		const isResume = (lastPage && lastChapter) && (lastPage > 1 || lastChapter > 1);
 		const style = {
 			maxHeight: "100%",
 			maxWidth: "100%"
@@ -74,7 +75,7 @@ class MangaInfoCard extends React.Component {
 					</div>
 				</div>
 				<section className='center-align'>
-					<Button onClick={this.onClick} name='resume'><Icon position='right' name='play_arrow' />{ isStart?'Start':'Resume'}</Button>
+					<Button onClick={this.onClick} name='resume'><Icon position='right' name='play_arrow' />{ isResume?'Resume':'Start'}</Button>
 					<Button onClick={this.onClick} name='favorite'><Icon position='right' name={'favorite' + (isFavorite?'':'_border')}/>Favorite</Button>
 				</section>
 				<section>

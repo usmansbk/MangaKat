@@ -249,10 +249,7 @@ export function fetchChapter(chapterUrl) {
 					throw new Error(Status.FETCH_CHAPTER_FAILURE);
 				}
 			})
-			.then(json => {
-				if (!json || Object.keys(json).length === 0) throw new Error(Status.FETCH_CHAPTER_FAILURE);
-				return dispatch(receiveChapter(chapterUrl, json))
-			})
+			.then(json => dispatch(receiveChapter(chapterUrl, json)))
 			.catch(error => dispatch(setStatus(Status.FETCH_CHAPTER_FAILURE)));
 	}
 }
@@ -268,10 +265,7 @@ export function fetchManga(mangaId) {
 				dispatch(setStatus(Status.FETCH_MANGA_SUCCESS));
 				return response.json();
 			})
-			.then(json => {
-				if (!json) throw new Error(Status.FETCH_MANGA_FAILURE);
-				return dispatch(receiveManga(mangaId, json));
-			})
+			.then(json => dispatch(receiveManga(mangaId, json)))
 			.catch(error => dispatch(setStatus(Status.FETCH_MANGA_FAILURE)));
 	}
 }
@@ -288,7 +282,6 @@ export function fetchMangaListByGenre(genreid) {
 				return response.json();
 			})
 			.then(json => {
-				if (!json) throw new Error(Status.FETCH_MANGALIST_FAILURE);
 				const normalizedList = normalizeList(json);
 				const byId = normalizedList.entities.manga;
 				const ids = normalizedList.result;
@@ -311,7 +304,6 @@ export function fetchMangaList() {
 				return response.json();
 			})
 			.then(json => {
-				if (!json) throw new Error(Status.FETCH_MANGALIST_FAILURE);
 				const normalizedList = normalizeList(json);
 				const byId = normalizedList.entities.manga;
 				const ids = normalizedList.result;
