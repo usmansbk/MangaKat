@@ -255,7 +255,11 @@ function filters(state=[], action) {
 	}
 }
 
+function version(state='1.0.1', action) {
+	return state;
+}
 const mangaApp = combineReducers({
+	version,
 	favorites,
 	selectedManga,
 	selectedChapter,

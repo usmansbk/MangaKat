@@ -7,13 +7,18 @@ import { createStore, applyMiddleware } from 'redux';
 import throttle from 'lodash/throttle';
 import mangakatApp from './redux/reducers';
 import App from './components/App';
-import { saveState, loadState } from './helpers/persistState';
+import { saveState, loadState, deleteState } from './helpers/persistState';
 import register from './registerServiceWorker';
 import './css/materialize.min.css';
+const currentVersion = '1.0.1';
 
 register();
 const loggerMiddleware = createLogger();
-const persistedState = loadState();
+let persistedState = loadState();
+
+if (persistedState && (persistedState.version !== currentVersion)) {
+	persistedState = deleteState();
+}
 
 const middlewares = [
 	thunkMiddleware

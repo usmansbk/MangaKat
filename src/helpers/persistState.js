@@ -18,3 +18,13 @@ export const saveState = state => {
 		console.log(err);
 	}
 }
+
+export const deleteState = () => {
+	try {
+		localStorage.removeItem('state');
+		console.log('Deleted previous app state');
+		return undefined;
+	} catch (err) {
+		return undefined;
+	}
+}
