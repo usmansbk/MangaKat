@@ -15,6 +15,7 @@ export default class ChapterList extends React.Component {
 	onClick(event) {
 		let { location } = this.state;
 		location = location === 'down' ? 'up' : 'down';
+		document.scrollingElement.scrollTop = location === 'down'?9999999999:0;
 		this.setState({
 			location
 		});
@@ -43,7 +44,7 @@ export default class ChapterList extends React.Component {
 					{chaptersLinks}
 				</div>
 				<div id='down'></div>
-				<Fab href={`#${this.state.location}`} name={`arrow_${direction}ward`} onClick={this.onClick} />
+				<Fab name={`arrow_${direction}ward`} onClick={this.onClick} />
 			</div>
 		);
 	}
