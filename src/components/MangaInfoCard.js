@@ -76,7 +76,6 @@ class MangaInfoCard extends React.Component {
 				<section className='center-align'>
 					<Button onClick={this.onClick} name='resume'><Icon position='right' name='play_arrow' />{ isStart?'Start':'Resume'}</Button>
 					<Button onClick={this.onClick} name='favorite'><Icon position='right' name={'favorite' + (isFavorite?'':'_border')}/>Favorite</Button>
-					<Button style={{margin: '5px'}}onClick={this.onClick} className='disabled' name='download'><Icon position='right' name={'save'}/>Save Offline</Button>
 				</section>
 				<section>
 					<ul className="collapsible">
