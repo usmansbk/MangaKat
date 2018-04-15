@@ -22,7 +22,6 @@ export const saveState = state => {
 export const deleteState = () => {
 	try {
 		localStorage.removeItem('state');
-		console.log('Deleted previous app state');
 		return undefined;
 	} catch (err) {
 		return undefined;

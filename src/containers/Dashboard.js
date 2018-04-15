@@ -28,7 +28,6 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		clearError: () => dispatch(setStatus(Status.CLEAR)),
 		fetchUpdates: (favorites) => {
-			console.log('Checking for updates');
 			favorites.forEach(mangaId => dispatch(fetchManga(mangaId)));
 		}
 	}
