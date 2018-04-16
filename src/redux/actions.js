@@ -1,4 +1,5 @@
 import fetch from 'cross-fetch';
+import localforage from 'localforage';
 import normalizeList from '../helpers/normalizeList';
 
 export const SEARCH_MANGA ='SEARCH_MANGA';
@@ -30,6 +31,7 @@ export const CLEAR_FILTER = 'CLEAR_FILTER';
 export const MARK_AS_READ = 'MARK_AS_READ';
 export const CLEAR_NOTIFICATION = 'CLEAR_NOTIFICATION';
 export const NOTIFY = 'NOTIFY';
+export const DOWNLOAD_FAILED = 'DOWNLOAD_FAILED';
 
 export const Status = {
 	CLEAR: 'CLEAR',
@@ -49,6 +51,8 @@ export const Status = {
 
 // eslint-disable-next-line
 const API_ENDPOINT = `https:\//doodle-manga-scraper.p.mashape.com`;
+// eslint-disable-next-line
+const PROXY_SERVER = `https:\//corsserver.herokuapp.com/file?url=`;
 const API_KEY = 'BkGNvIgwAOmshhxjwHYdr1oJiRGdp1iRA5OjsndoBSE2Gb6Nqr';
 const SOURCE = 'mangareader.net';
 
@@ -56,6 +60,14 @@ export function selectSort(sort) {
 	return {
 		type: SORT_BY,
 		sort
+	}
+}
+
+export function downloadFailed(mangaId, chapterId) {
+	return {
+		type: DOWNLOAD_FAILED,
+		mangaId,
+		chapterId
 	}
 }
 
@@ -195,15 +207,6 @@ function requestDownload(mangaId, chapterId) {
 	}
 }
 
-function setImage(chapterUrl, pageId, imageUrl) {
-	return {
-		type: SET_IMAGE,
-		chapterUrl,
-		pageId,
-		imageUrl
-	}
-}
-
 function receiveMangaGenreList(byId, ids) {
 	return {
 		type: RECEIVE_GENRE_MANGALIST,
@@ -269,7 +272,6 @@ export function fetchChapter(chapterUrl) {
 					return response.json();
 			})
 			.then(json => {
-				console.log('CHAPTER', json);
 				if (!json) throw new Error(Status.FETCH_CHAPTER_FAILURE);
 				return dispatch(receiveChapter(chapterUrl, json))
 			})
@@ -337,20 +339,23 @@ export function fetchMangaList() {
 	}
 }
 
-export default function fetchImage(url, pageId, chapterUrl) {
-	return dispatch => {
-		return fetch(url, {mode: 'no-cors'})
-			.then(response => {
-				if (!response.ok) throw	new Error(Status.FETCH_PAGE_FAILURE);
-				return response.blob()
-			})
-			.then(blob => {
-				const imgUrl = URL.createObjectURL(blob);
-				return dispatch(setImage(chapterUrl, pageId, imgUrl));
-			})
-			.then(() => dispatch(setStatus(Status.FETCH_PAGE_SUCCESS)))
-			.catch(error => dispatch(setStatus(Status.FETCH_PAGE_FAILURE)));
-	}
+export default function fetchImage(page) {
+	const url = `${PROXY_SERVER}${page.url}`;
+	return fetch(url, {mode: 'no-cors'})
+		.then(response => {
+			if (!response.ok) Promise.reject(Error(Status.FETCH_PAGE_FAILURE));
+			return response.blob()
+		})
+		.then(blob => {
+			let reader = new FileReader();
+			reader.readAsDataURL(blob);
+			return new Promise((resolve, reject) => {
+				reader.onloadend = () => {
+					let base64data = reader.result;
+			  	resolve(base64data);
+				}
+			});
+		});
 }
 
 export function downloadChapter(mangaId, chapterUrl) {
@@ -361,16 +366,21 @@ export function downloadChapter(mangaId, chapterUrl) {
 		dispatch(requestDownload(mangaId, chapterId));
 		return apiRequest(url)
 			.then(response => {
-				if (!response.ok) throw new Error(Status.FETCH_CHAPTER_FAILURE);
-				dispatch(setStatus(Status.FETCH_CHAPTER_SUCCESS));
+				if (!response.ok) Promise.reject(Error(Status.FETCH_CHAPTER_FAILURE));
 				return response.json();
 			})
 			.then(json => {
 				dispatch(receiveChapter(chapterUrl, json));
 				const {pages} = json;
-				pages.forEach((page) => dispatch(fetchImage(page.url, page.pageId, chapterUrl)));
+				return Promise.all(pages.map(fetchImage));
+			})
+			.then(dataUrls => {
+				return localforage.setItem(chapterUrl, dataUrls)
 			})
 			.then(() => dispatch(receiveDownload(mangaId, chapterId)))
-			.catch(error => dispatch(setStatus(Status.DOWNLOAD_CHAPTER_FAILURE)));
+			.catch(error => {
+				dispatch(downloadFailed(mangaId, chapterId));
+				dispatch(setStatus(Status.DOWNLOAD_CHAPTER_FAILURE));
+			});
 	}
 }

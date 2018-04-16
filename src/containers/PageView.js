@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import PageView from '../components/views/PageView';
+import localforage from 'localforage';
 import {fetchChapter, fetchManga, selectManga, selectChapter, saveSession, markRead} from '../redux/actions';
 
 const getManga = (mangas, mangaId) => {
@@ -10,7 +11,7 @@ const getManga = (mangas, mangaId) => {
 const mapStateToProps = (state) => {
 	return {
 		manga: getManga(state.mangas.byId, state.selectedManga),
-		chapters: state.chapters.byId
+		chapters: state.chapters.byId,
 	}
 }
 
@@ -31,7 +32,12 @@ const mapDispatchToProps = dispatch => {
 		},
 		markAsRead: (mangaId, chapterId) => {
 			dispatch(markRead(mangaId, chapterId));
-		}
+		},
+		getSavedChapter: (chapterUrl) => {
+			return localforage.getItem(chapterUrl).then(value => {
+				return Promise.resolve(value);
+			});
+		} 
 	}
 }
 

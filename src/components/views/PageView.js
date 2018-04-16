@@ -10,7 +10,8 @@ export default class PageView extends React.Component {
 		this.state = {
 			pageId: 1,
 			chapterId: 1,
-			mangaId: ''
+			mangaId: '',
+			dataURLs: null,
 		}
 		this.style = {
 			width: "inherit",
@@ -40,7 +41,7 @@ export default class PageView extends React.Component {
 		const {name} = event.target;
 		const key = event.key;
 	
-		if( !name && key !== 'ArrowLeft' && key !== 'ArrowRight') return;
+		if( !name && (key !== 'ArrowLeft') && (key !== 'ArrowRight')) return;
 
 		const {mangaId, pageId, chapterId} = this.state;
 		const { history, saveSession } = this.props;
@@ -85,21 +86,23 @@ export default class PageView extends React.Component {
 	}
 
 	loadPage(props) {
-		const { history, chapters, setPage, loadManga, loadChapter, manga, saveSession, markAsRead} = props;
+		const { history, chapters, setPage, loadManga, loadChapter, manga, saveSession, markAsRead, getSavedChapter} = props;
 		const url = history.location.pathname;
 		this.url = url;
 		const tokens = this.parseUrl(url);
 		const [, mangaId, chapterId, pageId ] = tokens;
 		setPage(mangaId, chapterId);
+
 		this.chapterUrl = `/${mangaId}/${chapterId}`;
 		this.currentChapter = chapters[this.chapterUrl] || {};
 		this.pages = this.currentChapter.pages || [];
-		this.numberOfChapters = manga.chapters && manga.chapters.length;
-		this.setState({mangaId, chapterId, pageId});
+
+		this.numberOfChapters = manga.chapters && (manga.chapters.length + 1);
 		if (!manga.isUpdated) loadManga(mangaId);
 		if (!this.currentChapter.isUpdated) loadChapter(this.chapterUrl);
+		getSavedChapter(this.chapterUrl).then(dataURLs => this.setState({dataURLs, mangaId,chapterId, pageId}));
 		markAsRead(mangaId, chapterId);
-		saveSession(mangaId, chapterId, pageId, manga);
+		saveSession(mangaId, chapterId, pageId);
 	}
 
 	componentDidMount() {
@@ -108,35 +111,39 @@ export default class PageView extends React.Component {
 
 	componentWillUnmount() {
 		document.removeEventListener('keydown', this.handleClick);
-	}
+	} 
 
 	componentWillMount() {
 		this.loadPage(this.props);
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const { history, chapters, manga} = nextProps;
+		const {history, chapters, manga, } = nextProps;
 		const newUrl = history.location.pathname;
 		if (newUrl !== this.url) {
 			this.loadPage(nextProps);
 		}
 		const tokens = this.parseUrl(newUrl);
-		const [, mangaId, chapterId] = tokens;
+		const [, mangaId, chapterId ] = tokens;
 		this.chapterUrl = `/${mangaId}/${chapterId}`;
 		this.currentChapter = chapters[this.chapterUrl] || {};
 		this.pages = this.currentChapter.pages || [];
-		this.numberOfChapters = manga.chapters && manga.chapters.length;
+		this.numberOfChapters = manga.chapters && (manga.chapters.length + 1);
+
 	}
 
 	render() { 
 		const {manga} = this.props;
-		const { pageId, chapterId, mangaId } = this.state;
+		const { pageId, chapterId, mangaId, dataURLs } = this.state;
 		const {name} = manga;
 		const pages = this.pages;
 		const mangaLink = `/${mangaId}`;
 
 		const page = pages[pageId-1];
-		const url = page && page.url;
+		let url = page && page.url;
+		if (dataURLs) {
+			url = dataURLs[pageId-1]
+		}
 		return (
 			<div className="col m12">
 				<h5 className='truncate' title={name}>

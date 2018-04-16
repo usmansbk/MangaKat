@@ -5,6 +5,7 @@
   "start": "serve -s build",
   "dependencies": {
     "cross-fetch": "^2.1.0",
+    "localforage": "^1.7.1",
     "materialize-css": "^1.0.0-beta",
     "normalizr": "^3.2.4",
     "react": "^16.3.0",

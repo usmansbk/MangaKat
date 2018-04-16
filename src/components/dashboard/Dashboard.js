@@ -41,7 +41,8 @@ export default class Dashboard extends React.Component {
 
 	componentWillMount() {
 		const { fetchUpdates, favorites } = this.props;
-		fetchUpdates(favorites);
+		function timedUpdates() { fetchUpdates(favorites)};
+		setInterval(timedUpdates, 8000);
 	}
 
 	render() {

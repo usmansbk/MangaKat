@@ -20,7 +20,8 @@ export default class Download extends React.Component {
 		const {mangas, mangaId} = this.props;
 		const manga = mangas[mangaId];
 		const isDownloading = manga && manga.downloading.length > 0;
-		const items = manga && manga.chapters.sort((a, b) => b.chapterId - a.chapterId)
+		let items = manga && manga.chapters.sort((a, b) => b.chapterId - a.chapterId)
+			.filter(chapter => !chapter.isDownloaded)
 			.map((chapter) => {
 				const isDownloading = manga.downloading.indexOf(chapter.chapterId + "") > -1;
 				return (

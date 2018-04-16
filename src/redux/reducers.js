@@ -3,7 +3,6 @@ import {
 	SELECT_MANGA,
 	SELECT_CHAPTER,
 	SET_STATUS,
-	SET_IMAGE,
 	REQUEST_MANGA,
 	RECEIVE_MANGA,
 	REQUEST_MANGALIST,
@@ -26,6 +25,7 @@ import {
 	MARK_AS_READ,
 	CLEAR_NOTIFICATION,
 	NOTIFY,
+	DOWNLOAD_FAILED,
 	SORT_BY
 } from './actions';
 
@@ -129,13 +129,27 @@ function mangas(state = {
 				ids: action.ids
 			});
 		case RECEIVE_DOWNLOAD:
+			let temp = new Set(state.byId[action.mangaId].downloading);
+			temp.delete(action.chapterId);
 			return Object.assign({}, state, {
 				byId: Object.assign({}, state.byId, {
 					[action.mangaId]: Object.assign({}, state.byId[action.mangaId], {
-						downloading: [...(new Set(state.byId[action.mangaId].downloading)).delete(action.chapterId)]
-					})
+						chapters: updateChapterList(state.byId[action.mangaId], action.mangaId, action.chapterId),
+						downloading: [...temp]
+					}),
 				})
 			})
+		case DOWNLOAD_FAILED:
+			temp = new Set(state.byId[action.mangaId].downloading);
+			temp.delete(action.chapterId);
+			return Object.assign({}, state, {
+				byId: Object.assign({}, state.byId, {
+					[action.mangaId]: Object.assign({}, state.byId[action.mangaId], {
+						downloading: [...temp]
+					}),
+				})
+			})
+
 		case REQUEST_DOWNLOAD:
 			return Object.assign({}, state, {
 				byId: Object.assign({}, state.byId, {
@@ -151,6 +165,16 @@ function mangas(state = {
 		default:
 			return state
 	}
+}
+
+function updateChapterList(manga, mangaId, chapterId) {
+	const { chapters } = manga;
+	let clone = [...chapters];
+	let foundIndex = clone.findIndex((chapter) => chapter.chapterId === +chapterId);
+	let chapter = clone[foundIndex];
+	chapter.isDownloaded = true;
+	clone[foundIndex] = chapter;
+	return clone;
 }
 
 function chapters(state = {
@@ -171,29 +195,10 @@ function chapters(state = {
 					})
 				}),
 			});
-		case SET_IMAGE:
-			return Object.assign({}, state, {
-				byId: Object.assign({}, state.byId, {
-					[action.chapterUrl]: Object.assign({}, state.byId[action.chapterUrl], {
-						pages: setImage(state.byId[action.chapterUrl], action.pageId, action.imageUrl)
-					})
-				})
-			})
 		default:
 			return state
 	}
 } 
-
-function setImage(chapter, pageId, imageUrl) {
-	const pages = chapter.pages;
-	let ret = [];
-	if (pages) {
-		ret = [...pages];
-		ret[pageId].url = imageUrl;
-		return ret;
-	}
-	return chapter;
-}
 
 function favorites(state = [], action) {
 	switch(action.type) {
@@ -259,7 +264,7 @@ function filters(state=[], action) {
 	}
 }
 
-function version(state='1.0.2', action) {
+function version(state='1.0.3', action) {
 	return state;
 }
 const mangaApp = combineReducers({
