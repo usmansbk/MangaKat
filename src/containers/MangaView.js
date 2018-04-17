@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import localforage from 'localforage'
 import MangaView from '../components/views/MangaView'
 import {
   selectManga,
@@ -7,6 +8,7 @@ import {
   searchManga,
   addFavorite,
   removeFavorite,
+  fetchImage
 } from '../redux/actions';
 
 const hasFailed = (status) => (status === Status.FETCH_MANGA_FAILURE);
@@ -26,7 +28,7 @@ const getLastRead = (mangas, mangaId) => {
   }
   return result;
 }
-
+ 
 const mapStateToProps = state => {
 	return {
 		manga: getManga(state.mangas, state.selectedManga),
@@ -41,15 +43,20 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     refresh: (mangaId, mangas) => {
-      const manga = mangas[mangaId];
-      const isUpdated = manga && manga.isUpdated
       dispatch(selectManga(mangaId));
       dispatch(searchManga(''));
-      if (!isUpdated) dispatch(fetchManga(mangaId));
+      dispatch(fetchManga(mangaId));
     },
     handleFavorite: (mangaId, favorites) => {
       const hasManga = favorites.indexOf(mangaId) !== -1;
       hasManga? dispatch(removeFavorite(mangaId)) : dispatch(addFavorite(mangaId));
+    },
+    getCover: (url) => {
+      return localforage.getItem(url).then(value => {
+          if (value) return value;
+          return fetchImage({url})
+          .then(base64 => localforage.setItem(url, base64))
+        })
     }
   }
 }

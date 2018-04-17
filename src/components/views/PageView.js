@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import NavControls from '../common/NavControls';
 import JumpNav from '../common/JumpNav';
-import Preloader from '../common/Preloader';
 
 export default class PageView extends React.Component {
 	constructor(props) {
@@ -12,6 +11,7 @@ export default class PageView extends React.Component {
 			chapterId: 1,
 			mangaId: '',
 			dataURLs: null,
+			url: '/loading.gif',
 		}
 		this.style = {
 			width: "inherit",
@@ -23,31 +23,33 @@ export default class PageView extends React.Component {
 	}
 
 	onLoadImage(event) {
-		this.setState({isLoadingImage: false});
 		document.scrollingElement.scrollTop = 0;
 	}
 
 	handleChange(event) {
 		const {name, value} = event.target;
-		let { history } = this.props;
-		const {mangaId, chapterId} = this.state;
+		let { history, saveSession } = this.props;
+		const {mangaId, chapterId, pageId} = this.state;
 		let url = history.location.pathname;
 		if (name === 'chapterId') url = `/${mangaId}/${value}/1`;
 		if (name === 'pageId') url = `/${mangaId}/${chapterId}/${value}`;
 		history.push(url);
+		saveSession(mangaId, chapterId, pageId);
 	}
 
 	handleClick(event) {
 		const {name} = event.target;
 		const key = event.key;
-	
+		if (this.pages.length === 0) {
+			event.stopImmediatePropagation();
+			return;
+		} 
 		if( !name && (key !== 'ArrowLeft') && (key !== 'ArrowRight')) return;
 
 		const {mangaId, pageId, chapterId} = this.state;
 		const { history, saveSession } = this.props;
 		let nextPage = +pageId;
 		let nextChapter = +chapterId;
-		let isLoadingImage = true;
 		if (name === 'previous' || key === 'ArrowLeft') {
 			nextPage -= 1;
 		}
@@ -65,14 +67,11 @@ export default class PageView extends React.Component {
 		if (nextChapter < 1) {
 			nextChapter = 1;
 			nextPage = 1;
-			isLoadingImage = false;
 		}
 		if (nextChapter > this.numberOfChapters) {
 			nextChapter = this.numberOfChapters;
-			nextPage = this.pages.length;
-			isLoadingImage = false;
+			nextPage = +pageId;
 		}
-		this.setState({isLoadingImage})
 		const newUrl = `/${mangaId}/${nextChapter}/${nextPage}`;
 		history.push(newUrl);
 		saveSession(mangaId, chapterId, pageId);
@@ -118,7 +117,7 @@ export default class PageView extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const {history, chapters, manga, } = nextProps;
+		const {history, chapters, manga, getImage } = nextProps;
 		const newUrl = history.location.pathname;
 		if (newUrl !== this.url) {
 			this.loadPage(nextProps);
@@ -129,21 +128,26 @@ export default class PageView extends React.Component {
 		this.currentChapter = chapters[this.chapterUrl] || {};
 		this.pages = this.currentChapter.pages || [];
 		this.numberOfChapters = manga.chapters && (manga.chapters.length + 1);
+		const { pageId, dataURLs } =this.state;
+		const page = this.pages[pageId-1];
+		// eslint-disable-next-line
+		let url = page && `https:\//corsserver.herokuapp.com/file?url=${page.url}`;
+		if (dataURLs) {
+			url = dataURLs[pageId-1]
+			this.setState({url})
+		} else {
+			getImage(url).then(url => this.setState({url})).catch(() => this.setState({url: '/error.png'}));
+		}
 
 	}
 
 	render() { 
 		const {manga} = this.props;
-		const { pageId, chapterId, mangaId, dataURLs } = this.state;
+		const { pageId, chapterId, mangaId } = this.state;
 		const {name} = manga;
 		const pages = this.pages;
 		const mangaLink = `/${mangaId}`;
-
-		const page = pages[pageId-1];
-		let url = page && page.url;
-		if (dataURLs) {
-			url = dataURLs[pageId-1]
-		}
+		const isDisabled = pages.length === 0
 		return (
 			<div className="col m12">
 				<h5 className='truncate' title={name}>
@@ -155,15 +159,13 @@ export default class PageView extends React.Component {
 				onChange={this.handleChange}
 				pages={pages}
 				chapters={manga.chapters} />
-				<NavControls onClick={this.handleClick} />
-				{ this.state.isLoadingImage && <Preloader className='indeterminate'/> }
+				<NavControls disabled={isDisabled} onClick={this.handleClick} />
 				<img
 				onLoad={this.onLoadImage}
-				src={url}
+				src={this.state.url}
 				alt={pageId}
 				style={this.style} />
-				{ this.state.isLoadingImage && <Preloader className='indeterminate'/> }
-				<NavControls onClick={this.handleClick} />
+				<NavControls disabled={isDisabled} onClick={this.handleClick} />
 			</div>
 		);
 	}

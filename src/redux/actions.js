@@ -339,12 +339,12 @@ export function fetchMangaList() {
 	}
 }
 
-export default function fetchImage(page) {
+export function fetchImage(page) {
 	const url = `${PROXY_SERVER}${page.url}`;
 	return fetch(url, {mode: 'no-cors'})
 		.then(response => {
-			if (!response.ok) Promise.reject(Error(Status.FETCH_PAGE_FAILURE));
-			return response.blob()
+			if (!response.ok) Promise.reject(Error('Fetch image failure'));
+			return response.blob();
 		})
 		.then(blob => {
 			let reader = new FileReader();

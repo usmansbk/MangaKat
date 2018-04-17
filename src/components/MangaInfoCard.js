@@ -9,6 +9,7 @@ class MangaInfoCard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.onClick = this.onClick.bind(this);
+		this.state = { dataURL: '/loading.gif' }
 	}
 
 	onClick(event) {
@@ -30,10 +31,14 @@ class MangaInfoCard extends React.Component {
 		M.Collapsible.init(document.querySelector('.collapsible'));
 	}
 	
+	componentWillReceiveProps(nextProps) {
+		const { getCover, cover } = nextProps;
+		getCover(cover).then(dataURL => this.setState({dataURL})).catch(() => this.setState({dataURL: '/favicon.ico'}));
+	}
+
 	render() {
 		const {
 			name,
-			cover,
 			author,
 			genres,
 			chapters,
@@ -43,7 +48,7 @@ class MangaInfoCard extends React.Component {
 			info,
 			favorites,
 			mangaId,
-			lastRead
+			lastRead,
 		} = this.props;
 		const isFavorite = favorites.indexOf(mangaId) !== -1;
 		const { lastPage, lastChapter } = lastRead;
@@ -56,7 +61,7 @@ class MangaInfoCard extends React.Component {
 			<div className="col s12 l6">
 				<div className="card horizontal">
 					<div className="card-image">
-						<img alt={name} src={cover} style={style} />
+						<img alt={name} src={this.state.dataURL} style={style} />
 					</div>
 					<div className="card-stacked">
 						<div className="card-content">

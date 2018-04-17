@@ -11,7 +11,7 @@ export default class MangaView extends React.Component {
 	}
 
 	render() {
-		const {manga} = this.props;
+		const {manga, getCover} = this.props;
 		return	(
 			<React.Fragment>
 				<MangaInfoCard
@@ -20,6 +20,7 @@ export default class MangaView extends React.Component {
 				 handleResume={this.props.handleResume}
 				 favorites={this.props.favorites}
 				 lastRead={this.props.lastRead}
+				 getCover={getCover}
 				 {...manga }/>
 				<ChapterList />
 			</React.Fragment>

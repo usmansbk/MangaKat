@@ -6,12 +6,12 @@ export default function NavControls(props) {
 		marginBottom: "5px"
 	};
 
-	const { onClick } = props
+	const { onClick, disabled } = props
 
 	return (
 		<div className="right" style={style}>
-			<Button name='previous' onClick={onClick} >Previous</Button>
-			<Button name='next' onClick={onClick} >Next</Button>
+			<Button className={disabled?"disabled":''} name='previous' onClick={onClick} >Previous</Button>
+			<Button className={disabled?"disabled":''} name='next' onClick={onClick} >Next</Button>
 		</div>
 	);
 }

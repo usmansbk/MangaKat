@@ -2,8 +2,17 @@ import React from 'react';
 import Badge from './common/Badge';
 
 export default class MangaCard extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {dataURL: '/favicon.ico'}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		const {img, getCover} = this.props;
+		getCover(img).then(dataURL => this.setState({dataURL})).catch(() => console.log(Error('Unable to fetch cover')));
+	}
 	render() {
-		const {img, mangaTitle, newChapters} = this.props;
+		const {mangaTitle, newChapters} = this.props;
 		const hasNew = newChapters && newChapters.length > 0;
 		const style = {
 			height: "200px",
@@ -13,7 +22,7 @@ export default class MangaCard extends React.Component {
 			<div className="col s6 m4 l2">
 				<div className="card hoverable">
 					<div className="card-image">
-						<img alt={mangaTitle} src={img} style={style} />
+						<img alt={mangaTitle} src={this.state.dataURL} style={style} />
 					</div>
 					<div
 					className="card-content"

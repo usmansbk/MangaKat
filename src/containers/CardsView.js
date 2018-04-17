@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
+import localforage from 'localforage';
 import CardsView from '../components/views/CardsView';
-import { clearNotification } from '../redux/actions';
+import { clearNotification, fetchImage } from '../redux/actions';
 
 const mapStateToProps = (state) => {
 	return {
@@ -13,7 +14,14 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		clearNotification: () => {
 			dispatch(clearNotification());
-		}
+		},
+    getCover: (url) => {
+      return localforage.getItem(url).then(value => {
+          if (value) return value;
+          return fetchImage({url})
+          .then(base64 => localforage.setItem(url, base64))
+        })
+    }
 	}
 }
 
