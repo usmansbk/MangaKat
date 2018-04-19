@@ -45,7 +45,8 @@ const mapDispatchToProps = dispatch => {
     refresh: (mangaId, mangas) => {
       dispatch(selectManga(mangaId));
       dispatch(searchManga(''));
-      dispatch(fetchManga(mangaId));
+      const manga = mangas[mangaId];
+      if (!manga.isUpdated) dispatch(fetchManga(mangaId));
     },
     handleFavorite: (mangaId, favorites) => {
       const hasManga = favorites.indexOf(mangaId) !== -1;

@@ -7,7 +7,7 @@ import MangaView from '../../containers/MangaView';
 import ListView from '../../containers/ListView';
 import CardsView from '../../containers/CardsView';
 import DownloadView from '../../containers/DownloadView';
-import PageView from '../../containers/PageView';
+import ChapterView from '../../containers/ChapterView';
 import AboutView from '../views/AboutView';
 import NoMatch from '../error/NoMatch';
 import Error from '../error/Error';
@@ -67,7 +67,7 @@ export default class Dashboard extends React.Component {
 						<Route exact path='/download/:mangaid' component={DownloadView} />
 						<Route exact path='/about' component={AboutView} />
 						<Route exact path='/:mangaid' component={MangaView} />
-						<Route exact path='/:mangaid/:chapterId/:pageid' component={PageView} />
+						<Route exact path='/:mangaid/:chapterId/:pageid' component={ChapterView} />
 						<Route component={NoMatch} />
 						</Switch>
 					</div>

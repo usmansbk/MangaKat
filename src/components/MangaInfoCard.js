@@ -33,7 +33,10 @@ class MangaInfoCard extends React.Component {
 	
 	componentWillReceiveProps(nextProps) {
 		const { getCover, cover } = nextProps;
-		getCover(cover).then(dataURL => this.setState({dataURL})).catch(() => this.setState({dataURL: '/favicon.ico'}));
+		getCover(cover).then(dataURL => {
+			if (dataURL) this.setState({dataURL})
+			else Promise.reject();
+		}).catch(() => this.setState({dataURL: '/favicon.ico'}));
 	}
 
 	render() {
